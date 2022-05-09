@@ -7,7 +7,7 @@ class Main extends Application {
   def start(stage: Stage): Unit = {
     try {
       val root: Parent = FXMLLoader.load(getClass.getResource("/FXML/ChatLogIn.fxml"))
-      stage.setTitle("Semple Chat")
+      stage.setTitle("Chat: LogIn")
       stage.setScene(new Scene(root))
       stage.setResizable(false)
       stage.show()
@@ -15,8 +15,4 @@ class Main extends Application {
       case e: Exception => println("exception caught: " + e);
     }
   }
-
-//  @FXML protected def ChatBTNSend(event: ActionEvent): Unit = {
-//
-//  }
 }
