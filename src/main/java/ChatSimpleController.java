@@ -1,10 +1,12 @@
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,7 +19,7 @@ public class ChatSimpleController implements Initializable {
     protected HBox HBoxMessageControl;
 
     @FXML
-    protected TextField ChatTFMessage;
+    protected TextArea ChatTFMessage;
 
     @FXML
     protected Button ChatBTNSend;
