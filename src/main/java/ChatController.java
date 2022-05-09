@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ChatSimpleController implements Initializable {
+public class ChatController implements Initializable {
 
     @FXML
     protected GridPane MainWindow;

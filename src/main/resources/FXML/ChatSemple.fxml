@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" style="-fx-background-color: #032728;" styleClass="GridPanelChat" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatSimpleController">
+<GridPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" style="-fx-background-color: #032728;" styleClass="GridPanelChat" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.20001220703125" minWidth="10.0" prefWidth="129.59996337890624" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="469.6000366210938" minWidth="10.0" prefWidth="469.6000366210938" />

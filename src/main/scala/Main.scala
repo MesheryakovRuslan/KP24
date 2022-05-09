@@ -6,8 +6,8 @@ import javafx.scene.{Parent, Scene}
 class Main extends Application {
   def start(stage: Stage): Unit = {
     try {
-      val root: Parent = FXMLLoader.load(getClass.getResource("/FXML/ChatSimple.fxml"))
-      stage.setTitle("Simple Chat")
+      val root: Parent = FXMLLoader.load(getClass.getResource("/FXML/ChatSemple.fxml"))
+      stage.setTitle("Semple Chat")
       stage.setScene(new Scene(root))
       stage.setResizable(false)
       stage.show()
