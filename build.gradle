@@ -5,13 +5,17 @@ plugins {
     id "org.openjfx.javafxplugin" version "0.0.12"
 }
 
+def versions = [
+        ScalaBinary: "2.13"
+]
+
 javafx {
     version = "17.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 application{
-    mainClassName('Main.scala.Main')
+    mainClassName('Main')
 }
 
 group 'org.example'
@@ -28,8 +32,13 @@ dependencies {
     testImplementation 'org.scalatest:scalatest_2.13:3.2.11'
     testImplementation 'org.scalatestplus:junit-4-13_2.13:3.2.11.0'
 
+    testCompileOnly 'junit:junit:4.12'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    implementation platform("com.typesafe.akka:akka-bom_${versions.ScalaBinary}:2.6.19")
+    implementation "com.typesafe.akka:akka-actor_${versions.ScalaBinary}"
+    testImplementation "com.typesafe.akka:akka-testkit_${versions.ScalaBinary}"
 }
 
 test {

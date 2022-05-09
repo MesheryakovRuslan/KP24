@@ -1,23 +1,22 @@
 import javafx.application.Application
-import javafx.application.Application.launch
 import javafx.fxml.{FXML, FXMLLoader}
 import javafx.stage.Stage
+import javafx.scene.{Parent, Scene}
 
 class Main extends Application {
-  def main(args: Array[String]) = {
-    //launch(args)
-  }
-
   def start(stage: Stage): Unit = {
-    val root = FXMLLoader.load(getClass.getResource("ChatSemple.fxml"))
-    import javafx.scene.Scene
-    stage.setTitle("Simple Chat")
-    stage.setScene(new Scene(root, 600, 546))
-
+    try {
+      val root: Parent = FXMLLoader.load(getClass.getResource("/FXML/ChatSimple.fxml"))
+      stage.setTitle("Simple Chat")
+      stage.setScene(new Scene(root))
+      stage.setResizable(false)
+      stage.show()
+    } catch {
+      case e: Exception => println("exception caught: " + e);
+    }
   }
 
-  @FXML
-  def click(actionEvent: Nothing): Unit = {
-    ChatBTNSend.setText("Hey!")
-  }
+//  @FXML protected def ChatBTNSend(event: ActionEvent): Unit = {
+//
+//  }
 }
