@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" style="-fx-background-color: #032728;" styleClass="GridPanelChat" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatLoginController">
+<GridPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" style="-fx-background-color: #032728;" styleClass="GridPanelChat" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatMainController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.20001220703125" minWidth="10.0" prefWidth="129.59996337890624" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="469.6000366210938" minWidth="10.0" prefWidth="469.6000366210938" />
@@ -24,7 +24,7 @@
         <HBox fx:id="HBoxMessageControl" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
             <TextArea fx:id="ChatTFMessage" prefHeight="38.0" prefWidth="395.0" style="-fx-background-color: #499094;" />
-                <Button fx:id="ChatBTNSend" mnemonicParsing="false" prefHeight="38.0" prefWidth="78.0" text="Send" HBox.hgrow="ALWAYS" />
+                <Button fx:id="ChatBTNSend" mnemonicParsing="false" prefHeight="38.0" prefWidth="78.0" text="Send" HBox.hgrow="ALWAYS" onAction="#actionChatBTNSend" />
             </children>
         </HBox>
         <VBox fx:id="VBoxChatMessage" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #01191A;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -35,12 +35,12 @@
         </VBox>
         <HBox fx:id="HBoxPanelForOption" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
             <children>
-                <Button fx:id="AddFriendBTN" mnemonicParsing="false" prefHeight="66.0" prefWidth="63.0" text="Add Friend" textAlignment="CENTER">
+                <Button fx:id="AddFriendBTN" mnemonicParsing="false" prefHeight="66.0" prefWidth="63.0" text="Add Friend" textAlignment="CENTER" onAction="#actionAddFriendBTN">
                     <font>
                         <Font name="Arial" size="7.0" />
                     </font>
                 </Button>
-                <Button fx:id="ConversationBTN" mnemonicParsing="false" prefHeight="57.0" prefWidth="67.0" text="conversation">
+                <Button fx:id="ConversationBTN" mnemonicParsing="false" prefHeight="57.0" prefWidth="67.0" text="conversation" onAction="#actionConversationBTN">
                     <font>
                         <Font name="Arial" size="7.0" />
                     </font>

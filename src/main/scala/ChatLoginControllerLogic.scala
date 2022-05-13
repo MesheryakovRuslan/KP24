@@ -1,6 +1,6 @@
 import javafx.event.ActionEvent
 
-class ChatLoginLogicController extends ChatLoginController {
+class ChatLoginControllerLogic extends ChatLoginController {
 
    override def actionLoginBTN(event: ActionEvent): Unit = {
      println("BTN click")
