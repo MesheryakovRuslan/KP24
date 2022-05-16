@@ -14,6 +14,7 @@ class ChatLoginControllerLogic extends ChatLoginController {
      stage.setResizable(false)
      stage.show()
 
+
      LoginBTN.getScene.getWindow.hide()
     }
 }

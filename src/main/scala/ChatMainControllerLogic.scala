@@ -1,5 +1,6 @@
 import javafx.event.ActionEvent
-class ChatMainControllerLogic extends ChatMainController with ChatAddFriendController {
+
+class ChatMainControllerLogic extends ChatMainController  {
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 

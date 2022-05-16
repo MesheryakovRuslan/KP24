@@ -4,9 +4,7 @@ import javafx.fxml.Initializable
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
-import javafx.scene.layout.GridPane
-import javafx.scene.layout.HBox
-import javafx.scene.layout.VBox
+import javafx.scene.layout.{AnchorPane, GridPane, HBox, VBox}
 
 import java.net.URL
 import java.util.ResourceBundle
@@ -25,6 +23,7 @@ class ChatMainController extends Initializable {
   @FXML protected var ConversationBTN: Button = null
   @FXML protected var HBoxTitleChat: HBox = null
   @FXML protected var ChatListLabel: Label = null
+  @FXML protected var AddFriendPanel: AnchorPane = null
 
   @FXML def actionChatBTNSend(Event: ActionEvent): Unit = {}
   @FXML def actionAddFriendBTN(Event: ActionEvent): Unit = {}
