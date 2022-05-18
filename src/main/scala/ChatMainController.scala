@@ -1,9 +1,7 @@
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.control.TextArea
+import javafx.scene.control.{Button, Label, ScrollPane, TextArea}
 import javafx.scene.layout.{AnchorPane, GridPane, HBox, VBox}
 
 import java.net.URL
@@ -11,6 +9,7 @@ import java.util.ResourceBundle
 
 
 class ChatMainController extends Initializable {
+  @FXML protected var ChatScrollPane: ScrollPane = null
   @FXML protected var MainWindow: GridPane = null
   @FXML protected var HBoxMessageControl: HBox = null
   @FXML protected var ChatTFMessage: TextArea = null
@@ -29,7 +28,6 @@ class ChatMainController extends Initializable {
   @FXML def actionAddFriendBTN(Event: ActionEvent): Unit = {}
   @FXML def actionConversationBTN(Event: ActionEvent): Unit = {}
 
-  override def initialize(location: URL, resources: ResourceBundle): Unit = {
-  }
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {}
 }
 
