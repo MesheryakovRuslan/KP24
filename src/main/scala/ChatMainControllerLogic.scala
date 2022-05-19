@@ -1,26 +1,19 @@
+import javafx.beans.property.Property
 import javafx.event.ActionEvent
-import javafx.scene.control
+import javafx.geometry.{Insets, Pos}
+import javafx.scene.layout.VBox
 import javafx.scene.control.Label
 import javafx.scene.paint.Color
-import javafx.scene.text.Font
+import javafx.scene.text.{Font, TextAlignment}
 
 class ChatMainControllerLogic extends ChatMainController  {
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
-    val message = ChatTFMessage.getText
-    val label = new Label
-    label.setFont(new Font("Arial",34.0))
-    label.setTextFill(Color.web("#0076a3"))
-    label.setText("Me: -> "+message)
-    label.setWrapText(true)
-    label.setMaxWidth(420)
-    label.setStyle("-fx-border-color:green")
-    label.setMinHeight(label.getMaxHeight)
-    VBoxChatMessage.getChildren.addAll(label)
-    ChatScrollPane.setVvalue(1)
-
-
-    VBoxChatMessage.setStyle("-fx-border-color:red")
+    if(ChatTFMessage.getText.nonEmpty){
+      printUserMessage()
+      ChatScrollPane.setVvalue(1)
+      ChatTFMessage.setText("")
+    }
   }
 
   override def actionAddFriendBTN(Event: ActionEvent): Unit = {
@@ -29,5 +22,19 @@ class ChatMainControllerLogic extends ChatMainController  {
 
   override def actionConversationBTN(Event: ActionEvent): Unit = {
 
+  }
+
+  def printUserMessage():Unit = {
+    val message = ChatTFMessage.getText
+    val label = new Label
+    label.setFont(new Font("Arial",18.0))
+    label.setTextFill(Color.web("#0076a3"))
+    label.setText(message)
+    label.setWrapText(true)
+    label.setPadding(new Insets(0, 5, 0, 0))
+    label.setMaxWidth(VBoxChatMessage.getWidth)
+    label.setTextAlignment(TextAlignment.RIGHT)
+    label.setAlignment(Pos.BASELINE_RIGHT)
+    VBoxChatMessage.getChildren.addAll(label)
   }
 }

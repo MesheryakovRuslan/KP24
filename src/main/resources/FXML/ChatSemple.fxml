@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,10 +31,13 @@
                 <Button fx:id="ChatBTNSend" mnemonicParsing="false" onAction="#actionChatBTNSend" prefHeight="38.0" prefWidth="78.0" text="Send" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
-      <ScrollPane fx:id="ChatScrollPane" prefHeight="465.0" prefWidth="470.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <ScrollPane  fx:id="ChatScrollPane" prefHeight="465.0" prefWidth="470.0" style="-fx-background: #01191A; -fx-border-color: #01191A;" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <content>
-              <VBox fx:id="VBoxChatMessage" prefHeight="467.0" prefWidth="454.0" style="-fx-background-color: #01191A;" />
+              <VBox fx:id="VBoxChatMessage" prefWidth="454.0" style="-fx-background-color: #01191A;" />
          </content>
+         <effect>
+            <Blend />
+         </effect>
       </ScrollPane>
         <VBox fx:id="VBoxFriendList" prefHeight="465.0" prefWidth="159.0" style="-fx-background-color: #032728;" GridPane.rowIndex="1">
             <children>
