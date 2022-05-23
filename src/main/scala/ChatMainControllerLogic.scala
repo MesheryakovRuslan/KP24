@@ -15,6 +15,15 @@ class ChatMainControllerLogic extends ChatMainController  {
   }
 
   override def actionAddFriendBTN(Event: ActionEvent): Unit = {
+    println("Add")
+    val nameFriend = NameAddFriendTF.getText
+    val UIDFriend = ChatUIDTF.getText
+    val label = new Label
+    label.setText(nameFriend + "\n" + UIDFriend)
+    label.setPrefWidth(110.0)
+    label.setPrefHeight(39.0)
+    label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
+    FriendListVbox.getChildren.add(label)
 
   }
 
@@ -34,5 +43,16 @@ class ChatMainControllerLogic extends ChatMainController  {
     label.setTextAlignment(TextAlignment.RIGHT)
     label.setAlignment(Pos.CENTER_RIGHT)
     VBoxChatMessage.getChildren.addAll(label)
+  }
+
+  override def actionVueFriendBTN(Event: ActionEvent): Unit = {
+    println("Vue")
+    if(AddFriendPanel.isVisible){
+      AddFriendPanel.setVisible(false)
+      FriendListScrollPane.setPrefHeight(470)
+
+    }else{
+      AddFriendPanel.setVisible(true)
+    }
   }
 }
