@@ -4,6 +4,7 @@ import javafx.fxml.Initializable
 import javafx.scene.control.{Button, Label, ScrollPane, TextArea, TextField}
 import javafx.scene.layout.{AnchorPane, GridPane, HBox, VBox}
 
+import java.io.File
 import java.net.URL
 import java.util.ResourceBundle
 
@@ -21,6 +22,7 @@ class ChatMainController extends Initializable {
   @FXML protected var FriendListVbox: VBox = null
   @FXML protected var VBoxFriendList: VBox = null
   @FXML protected var ChatWidthFriendLabel: Label = null
+  @FXML protected var UserNameLabel: Label = null
   @FXML protected var HBoxPanelForOption: HBox = null
   @FXML protected var AddFriendBTN: Button = null
   @FXML protected var VueFriendBTN: Button = null
@@ -37,7 +39,27 @@ class ChatMainController extends Initializable {
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     AddFriendPanel.setVisible(false)
-    FriendListScrollPane.setPrefHeight(470)
+    //Загрузка друзей в FriendListVbox
+    val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
+    val arrFiles = file.listFiles
+    arrFiles.foreach{f:File =>
+
+      val label = new Label
+      label.setText(f.getName.substring(0,f.getName.length-4))
+      label.setPrefWidth(110.0)
+      label.setPrefHeight(39.0)
+      label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
+
+      label.setOnMouseClicked(ActionEvent =>{
+        VBoxChatMessage.getChildren.clear()
+        var pathToChat = "C:\\KP24\\src\\main\\resources\\Chats\\"+ label.getText+".txt"
+        println(pathToChat)
+        UserNameLabel.setText(label.getText)
+        println("click")
+      })
+
+      FriendListVbox.getChildren.add(label)
+    }
   }
 }
 
