@@ -7,15 +7,16 @@ import javafx.scene.text.{Font, TextAlignment}
 
 import java.io._
 import java.net.URL
-import java.nio.charset.StandardCharsets
 import java.util.ResourceBundle
 import scala.io.Source
 
 
 class ChatMainControllerLogic extends ChatMainController {
+
   var activeChat = ""
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
+
     if (ChatTFMessage.getText.nonEmpty) {
       printUserMessage()
       ChatScrollPane.setVvalue(1)
@@ -34,7 +35,7 @@ class ChatMainControllerLogic extends ChatMainController {
       addFriendIntoFriendList()
       print(fileObject.getPath)
       val printWriter = new PrintWriter(fileObject)
-      printWriter.write(NameAddFriendTF.getText + " " + ChatUIDTF.getText)
+      //printWriter.write(NameAddFriendTF.getText + " " + ChatUIDTF.getText)
       printWriter.close()
       NameAddFriendTF.setText("")
       ChatUIDTF.setText("")
@@ -55,18 +56,20 @@ class ChatMainControllerLogic extends ChatMainController {
 
   def printUserMessage(): Unit = {
 
-    val message = ChatTFMessage.getText
+    val message = "me => " +  ChatTFMessage.getText
     val label = new Label
+
+    val fileWriter = new FileWriter(activeChat,true)
+    fileWriter.write(message + "\n")
+    fileWriter.close()
+
     label.setFont(new Font("Arial", 18.0))
     label.setTextFill(Color.web("#0076a3"))
     label.setText(message)
     label.setWrapText(true)
-    label.setPadding(new Insets(0, 8, 0, VBoxChatMessage.getWidth / 2.5))
-    label.setMaxWidth(VBoxChatMessage.getWidth)
-    label.setTextAlignment(TextAlignment.RIGHT)
-    label.setAlignment(Pos.CENTER_RIGHT)
-    VBoxChatMessage.getChildren.addAll(label)
+    label.setPadding(new Insets(0, 0, 10, 0))
 
+    VBoxChatMessage.getChildren.addAll(label)
   }
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {
@@ -98,13 +101,17 @@ class ChatMainControllerLogic extends ChatMainController {
       println(activeChat)
       UserNameLabel.setText(label.getText)
       println("click")
+      loadChat(activeChat)
     })
 
     FriendListVbox.getChildren.add(label)
   }
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
+
     AddFriendPanel.setVisible(false)
+    ChatScrollPane.setFitToWidth(true)
+
     //Загрузка друзей в FriendListVbox
     val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
     val arrFiles = file.listFiles
@@ -112,7 +119,7 @@ class ChatMainControllerLogic extends ChatMainController {
 
       val label = new Label
       label.setText(f.getName.substring(0,f.getName.length-4))
-      label.setPrefWidth(110.0)
+      label.setPrefWidth(130.0)
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
 
@@ -136,17 +143,11 @@ class ChatMainControllerLogic extends ChatMainController {
       val label = new Label
       label.setFont(new Font("Arial", 18.0))
       label.setTextFill(Color.web("#0076a3"))
-      val fixed = new String(f.getBytes("Windows-1252"), "UTF-8")
+      val fixed = new String(f.getBytes())
       label.setText(fixed)
       label.setWrapText(true)
-      label.setPadding(new Insets(0, 8, 0, VBoxChatMessage.getWidth / 2.5))
-      label.setMaxWidth(VBoxChatMessage.getWidth)
-      label.setTextAlignment(TextAlignment.RIGHT)
-      label.setAlignment(Pos.CENTER_RIGHT)
+      label.setPadding(new Insets(0, 0, 10, 0))
       VBoxChatMessage.getChildren.addAll(label)
     }
-
-
-
   }
 }
