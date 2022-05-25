@@ -35,7 +35,6 @@ class ChatMainControllerLogic extends ChatMainController {
       addFriendIntoFriendList()
       print(fileObject.getPath)
       val printWriter = new PrintWriter(fileObject)
-      //printWriter.write(NameAddFriendTF.getText + " " + ChatUIDTF.getText)
       printWriter.close()
       NameAddFriendTF.setText("")
       ChatUIDTF.setText("")
@@ -59,7 +58,13 @@ class ChatMainControllerLogic extends ChatMainController {
     val message = "me => " +  ChatTFMessage.getText
     val label = new Label
 
+//    val file = new File(activeChat)
+//    val bufferedWriter = new BufferedWriter(new FileWriter(file))
+//    bufferedWriter.write(message+"\n")
+//    bufferedWriter.close()
+
     val fileWriter = new FileWriter(activeChat,true)
+    println(fileWriter.getEncoding)
     fileWriter.write(message + "\n")
     fileWriter.close()
 
@@ -137,7 +142,6 @@ class ChatMainControllerLogic extends ChatMainController {
   }
 
   def  loadChat(path: String) {
-
     val lines = Source.fromFile(path).getLines.toList
     lines.foreach{f:String=>
       val label = new Label
