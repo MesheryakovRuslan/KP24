@@ -38,28 +38,7 @@ class ChatMainController extends Initializable {
   @FXML def actionConversationBTN(Event: ActionEvent): Unit = {}
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
-    AddFriendPanel.setVisible(false)
-    //Загрузка друзей в FriendListVbox
-    val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
-    val arrFiles = file.listFiles
-    arrFiles.foreach{f:File =>
 
-      val label = new Label
-      label.setText(f.getName.substring(0,f.getName.length-4))
-      label.setPrefWidth(110.0)
-      label.setPrefHeight(39.0)
-      label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
-
-      label.setOnMouseClicked(ActionEvent =>{
-        VBoxChatMessage.getChildren.clear()
-        var pathToChat = "C:\\KP24\\src\\main\\resources\\Chats\\"+ label.getText+".txt"
-        println(pathToChat)
-        UserNameLabel.setText(label.getText)
-        println("click")
-      })
-
-      FriendListVbox.getChildren.add(label)
-    }
   }
 }
 

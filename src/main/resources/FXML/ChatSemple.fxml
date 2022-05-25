@@ -44,9 +44,9 @@
             <ScrollPane prefHeight="322.0" prefWidth="130.0" fx:id="FriendListScrollPane" style="-fx-background: #01191A; -fx-border-color: #01191A;">
                <content>
                   <VBox fx:id="FriendListVbox" prefWidth="110.0">
-                     <children>
-                        <Label fx:id="ChatWidthFriendLabel" prefHeight="39.0" prefWidth="110.0" style="-fx-background-color: #01191A; -fx-border-color: #499094;" text="UserChat" textAlignment="CENTER" textFill="WHITE" />
-                     </children>
+<!--                     <children>-->
+<!--                        <Label fx:id="ChatWidthFriendLabel" prefHeight="39.0" prefWidth="110.0" style="-fx-background-color: #01191A; -fx-border-color: #499094;" text="UserChat" textAlignment="CENTER" textFill="WHITE" />-->
+<!--                     </children>-->
                   </VBox>
                </content>
             </ScrollPane>

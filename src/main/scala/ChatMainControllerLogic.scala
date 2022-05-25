@@ -6,6 +6,10 @@ import javafx.scene.paint.Color
 import javafx.scene.text.{Font, TextAlignment}
 
 import java.io._
+import java.net.URL
+import java.nio.charset.StandardCharsets
+import java.util.ResourceBundle
+import scala.io.Source
 
 
 class ChatMainControllerLogic extends ChatMainController {
@@ -97,5 +101,52 @@ class ChatMainControllerLogic extends ChatMainController {
     })
 
     FriendListVbox.getChildren.add(label)
+  }
+
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
+    AddFriendPanel.setVisible(false)
+    //Загрузка друзей в FriendListVbox
+    val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
+    val arrFiles = file.listFiles
+    arrFiles.foreach{f:File =>
+
+      val label = new Label
+      label.setText(f.getName.substring(0,f.getName.length-4))
+      label.setPrefWidth(110.0)
+      label.setPrefHeight(39.0)
+      label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
+
+      label.setOnMouseClicked(ActionEvent =>{
+        VBoxChatMessage.getChildren.clear()
+        activeChat = "C:\\KP24\\src\\main\\resources\\Chats\\"+ label.getText+".txt"
+        println(activeChat)
+        UserNameLabel.setText(label.getText)
+        println("click")
+        loadChat(activeChat)
+      })
+
+      FriendListVbox.getChildren.add(label)
+    }
+  }
+
+  def  loadChat(path: String) {
+
+    val lines = Source.fromFile(path).getLines.toList
+    lines.foreach{f:String=>
+      val label = new Label
+      label.setFont(new Font("Arial", 18.0))
+      label.setTextFill(Color.web("#0076a3"))
+      val fixed = new String(f.getBytes("Windows-1252"), "UTF-8")
+      label.setText(fixed)
+      label.setWrapText(true)
+      label.setPadding(new Insets(0, 8, 0, VBoxChatMessage.getWidth / 2.5))
+      label.setMaxWidth(VBoxChatMessage.getWidth)
+      label.setTextAlignment(TextAlignment.RIGHT)
+      label.setAlignment(Pos.CENTER_RIGHT)
+      VBoxChatMessage.getChildren.addAll(label)
+    }
+
+
+
   }
 }
