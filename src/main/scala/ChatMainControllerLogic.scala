@@ -113,7 +113,6 @@ class ChatMainControllerLogic extends ChatMainController {
     AddFriendPanel.setVisible(false)
     ChatScrollPane.setFitToWidth(true)
 
-
     //Загрузка друзей в FriendListVbox
     val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
     val arrFiles = file.listFiles
