@@ -11,9 +11,9 @@ import java.util.ResourceBundle
 
 class ChatLoginController extends Initializable {
   @FXML protected var ChatLogIn: AnchorPane = null
-  @FXML protected var NameTF: TextField = null
+  @FXML protected var LoginTF: TextField = null
   @FXML protected var PasswordTF: TextField = null
-  @FXML protected var NameTitleLabel: Label = null
+  @FXML protected var LoginTitleLabel: Label = null
   @FXML protected var PasswordTitleLabel: Label = null
   @FXML protected var TitleLabel: Label = null
   @FXML protected var LoginBTN: Button = null

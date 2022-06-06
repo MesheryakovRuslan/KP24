@@ -14,6 +14,7 @@ import scala.io.Source
 class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
+  var login =""
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
@@ -55,13 +56,8 @@ class ChatMainControllerLogic extends ChatMainController {
 
   def printUserMessage(): Unit = {
 
-    val message = "me => " +  ChatTFMessage.getText
+    val message = login + " => " +  ChatTFMessage.getText
     val label = new Label
-
-//    val file = new File(activeChat)
-//    val bufferedWriter = new BufferedWriter(new FileWriter(file))
-//    bufferedWriter.write(message+"\n")
-//    bufferedWriter.close()
 
     val fileWriter = new FileWriter(activeChat,true)
     println(fileWriter.getEncoding)
@@ -117,6 +113,7 @@ class ChatMainControllerLogic extends ChatMainController {
     AddFriendPanel.setVisible(false)
     ChatScrollPane.setFitToWidth(true)
 
+
     //Загрузка друзей в FriendListVbox
     val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
     val arrFiles = file.listFiles
@@ -136,7 +133,7 @@ class ChatMainControllerLogic extends ChatMainController {
         println("click")
         loadChat(activeChat)
       })
-
+      UserNameLabel.setText("")
       FriendListVbox.getChildren.add(label)
     }
   }
@@ -155,3 +152,4 @@ class ChatMainControllerLogic extends ChatMainController {
     }
   }
 }
+
