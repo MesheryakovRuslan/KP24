@@ -1,15 +1,14 @@
 import javafx.event.ActionEvent
-import javafx.geometry.{Insets, Pos}
+import javafx.geometry.Insets
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Label}
 import javafx.scene.paint.Color
-import javafx.scene.text.{Font, TextAlignment}
+import javafx.scene.text.Font
 
 import java.io._
 import java.net.URL
 import java.util.ResourceBundle
 import scala.io.Source
-
 
 class ChatMainControllerLogic extends ChatMainController {
 
@@ -19,6 +18,7 @@ class ChatMainControllerLogic extends ChatMainController {
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
     if (ChatTFMessage.getText.nonEmpty) {
+
       printUserMessage()
       ChatScrollPane.setVvalue(1)
       ChatTFMessage.setText("")
@@ -39,14 +39,12 @@ class ChatMainControllerLogic extends ChatMainController {
       printWriter.close()
       NameAddFriendTF.setText("")
       ChatUIDTF.setText("")
-
     } else {
 
       val alert = new Alert(AlertType.WARNING)
       alert.setTitle("error")
       alert.setContentText("friend add failed")
       alert.show()
-
     }
   }
 
@@ -58,8 +56,8 @@ class ChatMainControllerLogic extends ChatMainController {
 
     val message = login + " => " +  ChatTFMessage.getText
     val label = new Label
-
     val fileWriter = new FileWriter(activeChat,true)
+
     println(fileWriter.getEncoding)
     fileWriter.write(message + "\n")
     fileWriter.close()
@@ -75,11 +73,10 @@ class ChatMainControllerLogic extends ChatMainController {
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {
 
-    println("Vue")
     if (AddFriendPanel.isVisible) {
+
       AddFriendPanel.setVisible(false)
       FriendListScrollPane.setPrefHeight(470)
-
     } else {
 
       AddFriendPanel.setVisible(true)
@@ -91,12 +88,13 @@ class ChatMainControllerLogic extends ChatMainController {
     val nameFriend = NameAddFriendTF.getText
     val UIDFriend = ChatUIDTF.getText
     val label = new Label
+
     label.setText(nameFriend)
     label.setPrefWidth(110.0)
     label.setPrefHeight(39.0)
     label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
-
     label.setOnMouseClicked(ActionEvent => {
+
       VBoxChatMessage.getChildren.clear()
       activeChat = "C:\\KP24\\src\\main\\resources\\Chats\\" + label.getText + ".txt"
       println(activeChat)
@@ -112,10 +110,10 @@ class ChatMainControllerLogic extends ChatMainController {
 
     AddFriendPanel.setVisible(false)
     ChatScrollPane.setFitToWidth(true)
-
     //Загрузка друзей в FriendListVbox
     val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
     val arrFiles = file.listFiles
+
     arrFiles.foreach{f:File =>
 
       val label = new Label
@@ -123,8 +121,8 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setPrefWidth(130.0)
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
-
       label.setOnMouseClicked(ActionEvent =>{
+
         VBoxChatMessage.getChildren.clear()
         activeChat = "C:\\KP24\\src\\main\\resources\\Chats\\"+ label.getText+".txt"
         println(activeChat)
@@ -132,14 +130,17 @@ class ChatMainControllerLogic extends ChatMainController {
         println("click")
         loadChat(activeChat)
       })
+
       UserNameLabel.setText("")
       FriendListVbox.getChildren.add(label)
     }
   }
 
   def  loadChat(path: String) {
+
     val lines = Source.fromFile(path).getLines.toList
     lines.foreach{f:String=>
+
       val label = new Label
       label.setFont(new Font("Arial", 18.0))
       label.setTextFill(Color.web("#0076a3"))

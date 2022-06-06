@@ -1,7 +1,7 @@
 import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
-import javafx.stage.Stage
 import javafx.scene.{Parent, Scene}
+import javafx.stage.Stage
 
 class ChatLoginControllerLogic extends ChatLoginController {
   //LogIn in chat and open window chat

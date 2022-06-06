@@ -1,10 +1,8 @@
 import javafx.event.ActionEvent
-import javafx.fxml.FXML
-import javafx.fxml.Initializable
-import javafx.scene.control.{Button, Label, ScrollPane, TextArea, TextField}
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.control._
 import javafx.scene.layout.{AnchorPane, GridPane, HBox, VBox}
 
-import java.io.File
 import java.net.URL
 import java.util.ResourceBundle
 

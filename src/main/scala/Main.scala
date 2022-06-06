@@ -1,7 +1,7 @@
 import javafx.application.Application
-import javafx.fxml.{FXML, FXMLLoader}
-import javafx.stage.Stage
+import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
+import javafx.stage.Stage
 
 class Main extends Application {
   def start(stage: Stage): Unit = {
