@@ -16,10 +16,6 @@ class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
   var login =""
-  val system: ActorSystem[MainActor.SayHello] = ActorSystem(MainActor(),"hi")
-
-  system ! MainActor.SayHello("World")
-  system ! MainActor.SayHello("Akka")
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
