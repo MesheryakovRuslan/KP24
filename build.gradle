@@ -32,16 +32,11 @@ def akkaVersion = '2.6.16'
 dependencies {
     implementation 'org.scala-lang:scala-library:2.13.8'
 
-//    testImplementation 'junit:junit:4.13.2'
-//    testImplementation 'org.scalatest:scalatest_2.13:3.2.11'
-//    testImplementation 'org.scalatestplus:junit-4-13_2.13:3.2.11.0'
-
     testCompileOnly 'junit:junit:4.12'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     implementation "com.typesafe.akka:akka-actor-typed_${scalaBinVersion}:${akkaVersion}"
-//    implementation "ch.qos.logback:logback-classic:1.2.3"
     testImplementation "com.typesafe.akka:akka-actor-testkit-typed_${scalaBinVersion}:${akkaVersion}"
     testImplementation "junit:junit:4.12"
 

@@ -1,3 +1,4 @@
+import akka.actor.typed.ActorSystem
 import javafx.event.ActionEvent
 import javafx.geometry.Insets
 import javafx.scene.control.Alert.AlertType
@@ -9,11 +10,16 @@ import java.io._
 import java.net.URL
 import java.util.ResourceBundle
 import scala.io.Source
+import MainActor._
 
 class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
   var login =""
+  val system: ActorSystem[MainActor.SayHello] = ActorSystem(MainActor(),"hi")
+
+  system ! MainActor.SayHello("World")
+  system ! MainActor.SayHello("Akka")
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
