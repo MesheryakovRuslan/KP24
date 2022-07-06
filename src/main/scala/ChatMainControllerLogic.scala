@@ -1,4 +1,5 @@
-
+import ControllerActor.SendMessage
+import akka.actor.typed.ActorSystem
 import javafx.event.ActionEvent
 import javafx.geometry.Insets
 import javafx.scene.control.Alert.AlertType
@@ -15,7 +16,9 @@ import scala.io.Source
 class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
-  var login =""
+  var login = ""
+  val ActorSendMsg: ActorSystem[ControllerActor.SendMessage] =ActorSystem(ControllerActor(), "AkkaController")
+
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
@@ -29,7 +32,7 @@ class ChatMainControllerLogic extends ChatMainController {
 
   override def actionAddFriendBTN(Event: ActionEvent): Unit = {
 
-    val PathToFile = "C:\\KP24\\src\\main\\resources\\Chats\\" + NameAddFriendTF.getText + ".txt"
+    val PathToFile = "src/main/resources/Chats/" + NameAddFriendTF.getText + ".txt"
     val fileObject = new File(PathToFile)
     val flag = fileObject.createNewFile()
 
@@ -59,8 +62,7 @@ class ChatMainControllerLogic extends ChatMainController {
     val message = login + " => " +  ChatTFMessage.getText
     val label = new Label
     val fileWriter = new FileWriter(activeChat,true)
-
-    println(fileWriter.getEncoding)
+    //println(message)
     fileWriter.write(message + "\n")
     fileWriter.close()
 
@@ -70,8 +72,10 @@ class ChatMainControllerLogic extends ChatMainController {
     label.setWrapText(true)
     label.setPadding(new Insets(0, 0, 10, 0))
 
+    ActorSendMsg ! SendMessage(message,activeChat)
     VBoxChatMessage.getChildren.addAll(label)
-    //SendMessage(message,activeChat)
+
+//    ActorTest ! SendMessage(message,activeChat)
   }
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {
@@ -99,10 +103,10 @@ class ChatMainControllerLogic extends ChatMainController {
     label.setOnMouseClicked(ActionEvent => {
 
       VBoxChatMessage.getChildren.clear()
-      activeChat = "C:\\KP24\\src\\main\\resources\\Chats\\" + label.getText + ".txt"
-      println(activeChat)
+      activeChat = "src/main/resources/Chats/" + label.getText + ".txt"
+      //println(activeChat)
       UserNameLabel.setText(label.getText)
-      println("click")
+      //println("click")
       loadChat(activeChat)
     })
 
@@ -114,7 +118,7 @@ class ChatMainControllerLogic extends ChatMainController {
     AddFriendPanel.setVisible(false)
     ChatScrollPane.setFitToWidth(true)
     //Загрузка друзей в FriendListVbox
-    val file = new File("C:\\KP24\\src\\main\\resources\\Chats\\")
+    val file = new File("src/main/resources/Chats")
     val arrFiles = file.listFiles
 
     arrFiles.foreach{f:File =>
@@ -127,10 +131,9 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setOnMouseClicked(ActionEvent =>{
 
         VBoxChatMessage.getChildren.clear()
-        activeChat = "C:\\KP24\\src\\main\\resources\\Chats\\"+ label.getText+".txt"
-        println(activeChat)
+        activeChat = "src/main/resources/Chats/"+ label.getText+".txt"
+        //println(activeChat)
         UserNameLabel.setText(label.getText)
-        println("click")
         loadChat(activeChat)
       })
 
@@ -152,6 +155,7 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setWrapText(true)
       label.setPadding(new Insets(0, 0, 10, 0))
       VBoxChatMessage.getChildren.addAll(label)
+
     }
   }
 }

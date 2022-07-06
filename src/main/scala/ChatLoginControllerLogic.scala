@@ -8,7 +8,7 @@ class ChatLoginControllerLogic extends ChatLoginController {
   override def actionLoginBTN(event: ActionEvent): Unit = {
     if (LoginTF.getText.trim.nonEmpty & PasswordTF.getText.trim.nonEmpty) {
 
-      val loader = new FXMLLoader(getClass.getResource("/FXML/ChatSemple.fxml"))
+      val loader = new FXMLLoader(getClass.getResource("FXML/ChatSemple.fxml"))
       val root:Parent = loader.load()
       val controller:ChatMainControllerLogic = loader.getController
       val stage = new Stage()

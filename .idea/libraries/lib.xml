@@ -2,6 +2,7 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/../JavaFX/javafx-sdk-18.0.1/lib" />
+      <root url="jar://$PROJECT_DIR$/../openjfx-18.0.1_linux-x64_bin-sdk.zip!/javafx-sdk-18.0.1/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

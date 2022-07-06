@@ -26,23 +26,27 @@ repositories {
     mavenCentral()
 }
 
-def scalaBinVersion = '2.12'
-def akkaVersion = '2.6.16'
-
 dependencies {
-    implementation 'org.scala-lang:scala-library:2.13.8'
-
-    testCompileOnly 'junit:junit:4.12'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
-    implementation "com.typesafe.akka:akka-actor-typed_${scalaBinVersion}:${akkaVersion}"
-    testImplementation "com.typesafe.akka:akka-actor-testkit-typed_${scalaBinVersion}:${akkaVersion}"
-    testImplementation "junit:junit:4.12"
-
     implementation platform("com.typesafe.akka:akka-bom_${versions.ScalaBinary}:2.6.19")
+
     implementation "com.typesafe.akka:akka-actor_${versions.ScalaBinary}"
     testImplementation "com.typesafe.akka:akka-testkit_${versions.ScalaBinary}"
+
+    implementation "com.typesafe.akka:akka-cluster-tools_${versions.ScalaBinary}"
+
+    implementation "com.typesafe.akka:akka-cluster_${versions.ScalaBinary}"
+
+    implementation 'org.scala-lang:scala-library:2.13.8'
+    testImplementation 'org.scalatest:scalatest_2.11:3.2.12'
+    testImplementation 'junit:junit:4.13.2'
+
+
+    implementation "com.typesafe.akka:akka-actor-typed_${versions.ScalaBinary}"
+    testImplementation "com.typesafe.akka:akka-actor-testkit-typed_${versions.ScalaBinary}"
+
 }
 
 test {
