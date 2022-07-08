@@ -1,5 +1,6 @@
-import ControllerActor.SendMessage
+import ControllerActor._
 import akka.actor.typed.ActorSystem
+import com.typesafe.config.ConfigFactory
 import javafx.event.ActionEvent
 import javafx.geometry.Insets
 import javafx.scene.control.Alert.AlertType
@@ -17,7 +18,15 @@ class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
   var login = ""
-  val ActorSendMsg: ActorSystem[ControllerActor.SendMessage] =ActorSystem(ControllerActor(), "AkkaController")
+  val ActorSystem: ActorSystem[ChatEvent] = _//ActorSystem(ControllerActor(), "AkkaController")
+
+  def startClusterSystem(port: String, address: String): Unit = {
+    val config = ConfigFactory.parseString(
+      s"""akka.remote.artery.canonical.port =$port
+         |akka.cluster.seed-nodes = ["akka://system@address:2551"]
+         |""".withFallback(ConfigFactory.load()))
+      system = ActorSystem(ControllerActor(this),"controllerActor",config)
+  }
 
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
