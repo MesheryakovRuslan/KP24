@@ -13,6 +13,7 @@ class ChatLoginControllerLogic extends ChatLoginController {
       val controller:ChatMainControllerLogic = loader.getController
       val stage = new Stage()
 
+
       controller.login = LoginTF.getText.trim
       stage.setTitle("Chat: Main")
       stage.setScene(new Scene(root))

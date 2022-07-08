@@ -1,5 +1,7 @@
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
+import javafx.fxml.FXMLLoader
+
 
 object ControllerActor{
   //trait RoomCommand
@@ -20,6 +22,9 @@ object ControllerActor{
   case class ReplyToFriendRequest (friendName: String, reply: String) extends ChatEvent
   // оваета на запрос в друзья
 
+  val loader = new FXMLLoader(getClass.getResource("FXML/ChatSemple.fxml"))
+  val controller: ChatMainControllerLogic = loader.getController
+
   def apply(): Behavior[ChatEvent] ={
     behaviorChat()
   }
@@ -27,10 +32,17 @@ object ControllerActor{
     Behaviors.receive { (context, message) =>
       message match {
         case SendMessage(textMessage, recipientName) =>
-          println("Actor SendMessage " + textMessage, recipientName)
+          //Отправка сообщений
+          println(textMessage + " message for " + recipientName)
           Behaviors.same
         case ReceiveMessages(textMessage: String, senderName: String) =>
-          println("Actor ReceiveMessages " + textMessage, senderName)
+          if ("@"+senderName.trim == "@"+senderName.trim ){ //del @ senderName
+            println("Message received")
+            controller.printReceivedMessage(textMessage)
+          }else{
+            println("Message not received")
+            controller.printReceivedMessage("Message not received")
+          }
           Behaviors.same
         case SendMessageToConversation(textMessage: String, recipientName: String) =>
           println("Actor SendMessageToConversation " + textMessage, recipientName)

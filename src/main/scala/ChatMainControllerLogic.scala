@@ -16,9 +16,11 @@ import scala.io.Source
 
 class ChatMainControllerLogic extends ChatMainController {
 
-  var activeChat = ""
+  var activeChatPath = ""
+  var activeChatUser = "@all"
   var login = ""
   val actorSystem: ActorSystem[ControllerActor.ChatEvent] = ActorSystem(ControllerActor(), "AkkaController")
+  var chatController=""
 
   def startClusterSystem(): Unit = {
     val config = ConfigFactory.parseString(s"""
@@ -43,6 +45,7 @@ class ChatMainControllerLogic extends ChatMainController {
       }
      """)
   }
+
 
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
@@ -82,11 +85,26 @@ class ChatMainControllerLogic extends ChatMainController {
 
   }
 
+  def printReceivedMessage(textMessage:String): Unit = {
+    val label = new Label
+    label.setFont(new Font("Arial", 18.0))
+    label.setTextFill(Color.web("##D33CB5"))
+    label.setText(textMessage)
+    label.setWrapText(true)
+    label.setPadding(new Insets(0, 0, 10, 0))
+
+    VBoxChatMessage.getChildren.addAll(label)
+
+    val fileWriter = new FileWriter(activeChatPath,true)
+    fileWriter.write(textMessage + "\n")
+    fileWriter.close()
+  }
+
   def printUserMessage(): Unit = {
 
     val message = login + " => " +  ChatTFMessage.getText
     val label = new Label
-    val fileWriter = new FileWriter(activeChat,true)
+    val fileWriter = new FileWriter(activeChatPath,true)
     //println(message)
     fileWriter.write(message + "\n")
     fileWriter.close()
@@ -99,12 +117,8 @@ class ChatMainControllerLogic extends ChatMainController {
 
     VBoxChatMessage.getChildren.addAll(label)
 
-    actorSystem ! SendMessage("Отправленное сообщени","Путь")
-    actorSystem ! ReceiveMessages("Полученное сообщение","Путь")
-    actorSystem ! SendMessageToConversation("Отправленное сообшение","Тема")
-    actorSystem ! ReceiveMessageToConversation("Полученное сообшение","Тема")
-    actorSystem ! FriendRequest("Имя")
-    actorSystem ! ReplyToFriendRequest("Имя","Ответ")
+    actorSystem ! SendMessage(message,activeChatUser)
+    actorSystem ! ReceiveMessages("@"+activeChatUser+" Привет",login)
   }
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {
@@ -132,11 +146,13 @@ class ChatMainControllerLogic extends ChatMainController {
     label.setOnMouseClicked(ActionEvent => {
 
       VBoxChatMessage.getChildren.clear()
-      activeChat = "src/main/resources/Chats/" + label.getText + ".txt"
-      //println(activeChat)
+      activeChatPath = "src/main/resources/Chats/" + label.getText + ".txt"
       UserNameLabel.setText(label.getText)
-      //println("click")
-      loadChat(activeChat)
+      loadChat(activeChatPath)
+      activeChatUser = "@"+label.getText.trim
+      println(activeChatPath)
+      println(activeChatUser)
+
     })
 
     FriendListVbox.getChildren.add(label)
@@ -160,10 +176,13 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setOnMouseClicked(ActionEvent =>{
 
         VBoxChatMessage.getChildren.clear()
-        activeChat = "src/main/resources/Chats/"+ label.getText+".txt"
+        activeChatPath = "src/main/resources/Chats/"+ label.getText+".txt"
         //println(activeChat)
         UserNameLabel.setText(label.getText)
-        loadChat(activeChat)
+        loadChat(activeChatPath)
+        activeChatUser = "@"+label.getText.trim
+        println(activeChatPath)
+        println(activeChatUser)
       })
 
       UserNameLabel.setText("")
