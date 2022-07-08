@@ -118,7 +118,7 @@ class ChatMainControllerLogic extends ChatMainController {
     VBoxChatMessage.getChildren.addAll(label)
 
     actorSystem ! SendMessage(message,activeChatUser)
-    actorSystem ! ReceiveMessages("@"+activeChatUser+" Привет",login)
+    actorSystem ! ReceiveMessages(activeChatUser+" Привет",login)
   }
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {

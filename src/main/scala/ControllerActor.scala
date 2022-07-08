@@ -35,8 +35,12 @@ object ControllerActor{
           //Отправка сообщений
           println(textMessage + " message for " + recipientName)
           Behaviors.same
+
         case ReceiveMessages(textMessage: String, senderName: String) =>
-          if ("@"+senderName.trim == "@"+senderName.trim ){ //del @ senderName
+          println(message)
+          println(senderName)
+          println(controller.login)
+          if ("@"+senderName.trim == "@"+controller.login.trim){ //del @ senderName
             println("Message received")
             controller.printReceivedMessage(textMessage)
           }else{
@@ -44,18 +48,23 @@ object ControllerActor{
             controller.printReceivedMessage("Message not received")
           }
           Behaviors.same
+
         case SendMessageToConversation(textMessage: String, recipientName: String) =>
           println("Actor SendMessageToConversation " + textMessage, recipientName)
           Behaviors.same
+
         case ReceiveMessageToConversation(textMessage: String, recipientName: String) =>
           println("Actor ReceiveMessageToConversation " + textMessage, recipientName)
           Behaviors.same
+
         case FriendRequest(friendName: String) =>
           println("Actor FriendRequest " + friendName)
           Behaviors.same
+
         case ReplyToFriendRequest(friendName: String, reply: String) =>
           println("Actor ReplyToFriendRequest " + friendName, reply)
           Behaviors.same
+
         case _ =>
           println("default")
           Behaviors.same
@@ -63,5 +72,7 @@ object ControllerActor{
     }
 }
 
+//https://habr.com/ru/company/piter/blog/266103/ <--
 //https://doc.akka.io/docs/akka/current/typed/distributed-pub-sub.html  <--
+//https://github.com/steklopod/akka/blob/akka_starter/src/main/resources/readmes/actors/actors.md <--
 
