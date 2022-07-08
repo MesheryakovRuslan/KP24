@@ -18,14 +18,30 @@ class ChatMainControllerLogic extends ChatMainController {
 
   var activeChat = ""
   var login = ""
-  val ActorSystem: ActorSystem[ChatEvent] = _//ActorSystem(ControllerActor(), "AkkaController")
+  val actorSystem: ActorSystem[ControllerActor.ChatEvent] = ActorSystem(ControllerActor(), "AkkaController")
 
-  def startClusterSystem(port: String, address: String): Unit = {
-    val config = ConfigFactory.parseString(
-      s"""akka.remote.artery.canonical.port =$port
-         |akka.cluster.seed-nodes = ["akka://system@address:2551"]
-         |""".withFallback(ConfigFactory.load()))
-      system = ActorSystem(ControllerActor(this),"controllerActor",config)
+  def startClusterSystem(): Unit = {
+    val config = ConfigFactory.parseString(s"""
+      akka {
+      actor {
+        provider = "cluster"
+      }
+      remote.artery {
+        canonical {
+          hostname = application.conf
+          port = 2551
+        }
+      }
+
+      cluster {
+        seed-nodes = [
+          "akka://ClusterSystem@127.0.0.1:2551",
+          "akka://ClusterSystem@127.0.0.1:2552"]
+
+        downing-provider-class = "akka.cluster.sbr.SplitBrainResolverProvider"
+      }
+      }
+     """)
   }
 
 
@@ -81,10 +97,14 @@ class ChatMainControllerLogic extends ChatMainController {
     label.setWrapText(true)
     label.setPadding(new Insets(0, 0, 10, 0))
 
-    ActorSendMsg ! SendMessage(message,activeChat)
     VBoxChatMessage.getChildren.addAll(label)
 
-//    ActorTest ! SendMessage(message,activeChat)
+    actorSystem ! SendMessage("Отправленное сообщени","Путь")
+    actorSystem ! ReceiveMessages("Полученное сообщение","Путь")
+    actorSystem ! SendMessageToConversation("Отправленное сообшение","Тема")
+    actorSystem ! ReceiveMessageToConversation("Полученное сообшение","Тема")
+    actorSystem ! FriendRequest("Имя")
+    actorSystem ! ReplyToFriendRequest("Имя","Ответ")
   }
 
   override def actionVueFriendBTN(Event: ActionEvent): Unit = {
