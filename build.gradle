@@ -32,12 +32,11 @@ dependencies {
 
     implementation platform("com.typesafe.akka:akka-bom_${versions.ScalaBinary}:2.6.19")
 
-    implementation "com.typesafe.akka:akka-actor_${versions.ScalaBinary}"
-    testImplementation "com.typesafe.akka:akka-testkit_${versions.ScalaBinary}"
-
     implementation "com.typesafe.akka:akka-cluster-tools_${versions.ScalaBinary}"
 
-    implementation "com.typesafe.akka:akka-cluster_${versions.ScalaBinary}"
+    implementation "com.typesafe.akka:akka-cluster-typed_${versions.ScalaBinary}"
+
+    implementation "com.typesafe.akka:akka-serialization-jackson_${versions.ScalaBinary}"
 
     implementation 'org.scala-lang:scala-library:2.13.8'
     testImplementation 'org.scalatest:scalatest_2.11:3.2.12'

@@ -1,5 +1,6 @@
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
+import javafx.application.Platform
 import javafx.fxml.FXMLLoader
 
 
@@ -12,9 +13,9 @@ object ControllerActor{
   case class ReceiveMessages (textMessage:String,senderName:String) extends ChatEvent
   // сообщения принятые(личные)
   case class SendMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
-  // сообщения отправленные в беседу
+  // сообщения отправленные (публичные)
   case class ReceiveMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
-  // сообщения полученные из беседы
+  // сообщения полученные (публичные)
 
   //trait ChatFriendEvent
   case class FriendRequest (friendName: String) extends ChatEvent
@@ -22,12 +23,14 @@ object ControllerActor{
   case class ReplyToFriendRequest (friendName: String, reply: String) extends ChatEvent
   // оваета на запрос в друзья
 
-  val loader = new FXMLLoader(getClass.getResource("FXML/ChatSemple.fxml"))
-  val controller: ChatMainControllerLogic = loader.getController
 
-  def apply(): Behavior[ChatEvent] ={
+  var controllerChat: ChatMainControllerLogic = _
+
+  def apply(controller : ChatMainControllerLogic): Behavior[ChatEvent] ={
+    controllerChat = controller
     behaviorChat()
   }
+
   private def behaviorChat(): Behavior[ChatEvent] =
     Behaviors.receive { (context, message) =>
       message match {
@@ -37,15 +40,9 @@ object ControllerActor{
           Behaviors.same
 
         case ReceiveMessages(textMessage: String, senderName: String) =>
-          println(message)
-          println(senderName)
-          println(controller.login)
-          if ("@"+senderName.trim == "@"+controller.login.trim){ //del @ senderName
+          if (senderName.equals(controllerChat.login.trim)){ //del @ senderName
             println("Message received")
-            controller.printReceivedMessage(textMessage)
-          }else{
-            println("Message not received")
-            controller.printReceivedMessage("Message not received")
+            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage))
           }
           Behaviors.same
 

@@ -12,7 +12,7 @@ class ChatMainController extends Initializable {
   @FXML protected var FriendListScrollPane: ScrollPane = null
   @FXML protected var MainWindow: GridPane = null
   @FXML protected var HBoxMessageControl: HBox = null
-  @FXML protected var ChatTFMessage: TextArea = null
+  @FXML var ChatTFMessage: TextArea = null
   @FXML protected var ChatBTNSend: Button = null
   @FXML protected var ChatUIDTF: TextField = null
   @FXML protected var NameAddFriendTF: TextField = null
