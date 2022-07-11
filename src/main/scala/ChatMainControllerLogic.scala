@@ -1,13 +1,17 @@
 import ControllerActor._
-import akka.actor.typed.ActorSystem
+import akka.actor.ProviderSelection.Cluster
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorSystem, Behavior}
+import akka.cluster.typed
+import akka.cluster.typed.Cluster
 import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
-import javafx.scene.{Parent, Scene}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Label}
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
+import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
 import java.io._
@@ -28,8 +32,8 @@ object ChatMainControllerLogic{
     stage.setResizable(false)
     stage.show()
 
-    controller.actorSystem = ActorSystem(ControllerActor(controller), "AkkaController")
-    //ControllerActor.controller = controller
+    controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController")
+    val clusterSystem = typed.Cluster(controller.actorSystem)
   }
 }
 
@@ -38,6 +42,8 @@ class ChatMainControllerLogic extends ChatMainController {
   var activeChatUser = "@all"
   var login = ""
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
+
+
 
     override def actionChatBTNSend(Event: ActionEvent): Unit = {
 
@@ -75,40 +81,45 @@ class ChatMainControllerLogic extends ChatMainController {
 
     }
 
-    def printReceivedMessage(textMessage:String): Unit = {
-      println("Print")
-      val label = new Label
-      label.setFont(new Font("Arial", 18.0))
-      label.setTextFill(Color.web("#D33CB5"))
-      label.setText(textMessage)
-      label.setWrapText(true)
-      label.setPadding(new Insets(0, 0, 10, 0))
+    def printReceivedMessage(textMessage:String, senderName:String): Unit = {
+      if (senderName==activeChatUser) {
+        val label = new Label
+        label.setFont(new Font("Arial", 18.0))
+        label.setTextFill(Color.web("#D33CB5"))
+        label.setText(textMessage)
+        label.setWrapText(true)
+        label.setPadding(new Insets(0, 0, 10, 0))
+        VBoxChatMessage.getChildren.addAll(label)
 
-      VBoxChatMessage.getChildren.addAll(label)
-
-      val fileWriter = new FileWriter(activeChatPath,true)
+      }
+      val fileWriter = new FileWriter("src/main/resources/Chats/"+ senderName.trim + ".txt",true)
       fileWriter.write(textMessage + "\n")
       fileWriter.close()
+      VBoxChatMessage.getChildren.clear()
+      loadChat(activeChatPath)
     }
 
+//    def updateVBoxChatMessage(): Unit ={
+//      VBoxChatMessage.getChildren.clear()
+//      loadChat(activeChatPath)
+//    }
+
     def printUserMessage(): Unit = {
-
-      val message = login + " => " +  ChatTFMessage.getText
-      val label = new Label
-      val fileWriter = new FileWriter(activeChatPath,true)
-      //println(message)
-      fileWriter.write(message + "\n")
-      fileWriter.close()
-
-      label.setFont(new Font("Arial", 18.0))
-      label.setTextFill(Color.web("#0076a3"))
-      label.setText(message)
-      label.setWrapText(true)
-      label.setPadding(new Insets(0, 0, 10, 0))
-
-      VBoxChatMessage.getChildren.addAll(label)
-
-      actorSystem ! SendMessage(message,activeChatUser)
+      if(ChatTFMessage.getText.nonEmpty) {
+        val message = login + " => " + ChatTFMessage.getText
+        val label = new Label
+        val fileWriter = new FileWriter(activeChatPath, true)
+        fileWriter.write(message + "\n")
+        fileWriter.close()
+        label.setFont(new Font("Arial", 18.0))
+        label.setTextFill(Color.web("#0076a3"))
+        label.setText(message)
+        label.setWrapText(true)
+        label.setPadding(new Insets(0, 0, 10, 0))
+        VBoxChatMessage.getChildren.addAll(label)
+        actorSystem ! SendMessage(message, activeChatUser, login)
+        //actorSystem ! ReceiveMessages(activeChatUser + " => 12333", login, "Георг")
+      }
     }
 
     override def actionVueFriendBTN(Event: ActionEvent): Unit = {
@@ -138,9 +149,8 @@ class ChatMainControllerLogic extends ChatMainController {
         activeChatPath = "src/main/resources/Chats/" + label.getText + ".txt"
         UserNameLabel.setText(label.getText)
         loadChat(activeChatPath)
-        activeChatUser = "@"+label.getText.trim
-        println(activeChatPath)
-        println(activeChatUser)
+        activeChatUser = label.getText.trim
+
       })
       FriendListVbox.getChildren.add(label)
     }

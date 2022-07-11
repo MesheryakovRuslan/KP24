@@ -1,16 +1,16 @@
+import akka.actor.TypedActor.self
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import javafx.application.Platform
-import javafx.fxml.FXMLLoader
 
 
 object ControllerActor{
   //trait RoomCommand
   trait ChatEvent
   // трейт – это сущность, которая инкапсулирует поля или методы
-  case class SendMessage (textMessage:String,recipientName:String) extends ChatEvent
+  case class SendMessage (textMessage:String, recipientName:String, senderName:String) extends ChatEvent
   // сообшение оправленные(личные)
-  case class ReceiveMessages (textMessage:String,senderName:String) extends ChatEvent
+  case class ReceiveMessages (textMessage:String, senderName:String,receiveName:String) extends ChatEvent
   // сообщения принятые(личные)
   case class SendMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
   // сообщения отправленные (публичные)
@@ -34,15 +34,19 @@ object ControllerActor{
   private def behaviorChat(): Behavior[ChatEvent] =
     Behaviors.receive { (context, message) =>
       message match {
-        case SendMessage(textMessage, recipientName) =>
-          //Отправка сообщений
+        case SendMessage(textMessage, recipientName, senderName:String) =>
+          if (recipientName == controllerChat.login || senderName == controllerChat.login){
+            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName))
+          }
           println(textMessage + " message for " + recipientName)
           Behaviors.same
 
-        case ReceiveMessages(textMessage: String, senderName: String) =>
-          if (senderName.equals(controllerChat.login.trim)){ //del @ senderName
+        case ReceiveMessages(textMessage, recipientName, senderName) =>
+          if (recipientName == controllerChat.login.trim){ //del @ senderName
             println("Message received")
-            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage))
+            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName))
+          } else if(recipientName.equals("@all")){
+            //self !  SendMessageToConversation(textMessage, senderName)
           }
           Behaviors.same
 
