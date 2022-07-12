@@ -7,7 +7,7 @@ object ControllerActor{
   //trait RoomCommand
   trait ChatEvent
   // трейт – это сущность, которая инкапсулирует поля или методы
-  case class SendMessage (textMessage:String, recipientName:String, senderName:String) extends ChatEvent
+  case class SendMessage (textMessage:String, recipientName:String, senderName:String, typeCommunication:String) extends ChatEvent
   // сообшение оправленные(личные)
   case class SendMessageToRoom (textMessage:String,recipientName:String) extends ChatEvent
   // сообщения отправленные (публичные)
@@ -30,9 +30,9 @@ object ControllerActor{
   private def behaviorChat(): Behavior[ChatEvent] =
     Behaviors.receive { (context, message) =>
       message match {
-        case SendMessage(textMessage, recipientName, senderName) =>
+        case SendMessage(textMessage, recipientName, senderName, typeCommunication) =>
           if (recipientName == controllerChat.login){
-            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName))
+            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName, typeCommunication))
           }
           println(textMessage + " message for " + recipientName)
           Behaviors.same

@@ -74,7 +74,7 @@ class ChatMainControllerLogic extends ChatMainController {
     override def actionConversationBTN(Event: ActionEvent): Unit = {
     }
 
-    def printReceivedMessage(textMessage:String, receiveName:String): Unit = {
+    def printReceivedMessage(textMessage:String, receiveName:String ,typeCommunication:String): Unit = {
       if (receiveName==activeChatUser) {
         val label = new Label
         label.setFont(new Font("Arial", 18.0))
@@ -85,19 +85,20 @@ class ChatMainControllerLogic extends ChatMainController {
         VBoxChatMessage.getChildren.addAll(label)
       }
 
-      if(chatType == "chat") {
+      if(typeCommunication == "chat") {
         val fileWriter = new FileWriter(PATH_TO_CHAT + receiveName.trim + ".txt",true)
         fileWriter.write(textMessage + "\n")
         fileWriter.close()
         VBoxChatMessage.getChildren.clear()
         loadChat(activeChatPath)
+        loadChatPanel()
       } else {
         val fileWriter = new FileWriter(PATH_TO_ROOM + receiveName.trim + ".txt",true)
         fileWriter.write(textMessage + "\n")
         fileWriter.close()
         VBoxChatMessage.getChildren.clear()
         loadChat(activeChatPath)
-
+        loadChatPanel()
       }
     }
 
@@ -114,7 +115,7 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setWrapText(true)
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
-        actorSystem ! SendMessage(message, activeChatUser, login)
+        actorSystem ! SendMessage(message, activeChatUser, login, chatType)
       }
     }
 
@@ -154,6 +155,7 @@ class ChatMainControllerLogic extends ChatMainController {
     }
 
     def loadChatPanel(): Unit ={
+      FriendListVbox.getChildren.clear()
       loadRoom()
       loadStoryChat()
       //loadOnlineUser(userName)
@@ -238,7 +240,7 @@ class ChatMainControllerLogic extends ChatMainController {
 
     def  loadChat(path: String) {
       val lines = Source.fromFile(path).getLines.toList
-      lines.foreach{f:String=>
+      lines.foreach{ f:String=>
         val label = new Label
         label.setFont(new Font("Arial", 18.0))
         label.setTextFill(Color.web("#0076a3"))
