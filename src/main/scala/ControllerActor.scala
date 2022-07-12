@@ -1,4 +1,3 @@
-import akka.actor.TypedActor.self
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import javafx.application.Platform
@@ -10,18 +9,15 @@ object ControllerActor{
   // трейт – это сущность, которая инкапсулирует поля или методы
   case class SendMessage (textMessage:String, recipientName:String, senderName:String) extends ChatEvent
   // сообшение оправленные(личные)
-  case class ReceiveMessages (textMessage:String, senderName:String,receiveName:String) extends ChatEvent
-  // сообщения принятые(личные)
-  case class SendMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
+  case class SendMessageToRoom (textMessage:String,recipientName:String) extends ChatEvent
   // сообщения отправленные (публичные)
   case class ReceiveMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
   // сообщения полученные (публичные)
-
-  //trait ChatFriendEvent
   case class FriendRequest (friendName: String) extends ChatEvent
   // запроса в друзья
   case class ReplyToFriendRequest (friendName: String, reply: String) extends ChatEvent
   // оваета на запрос в друзья
+  case class UserOnline (userName:String) extends ChatEvent
 
 
   var controllerChat: ChatMainControllerLogic = _
@@ -34,23 +30,20 @@ object ControllerActor{
   private def behaviorChat(): Behavior[ChatEvent] =
     Behaviors.receive { (context, message) =>
       message match {
-        case SendMessage(textMessage, recipientName, senderName:String) =>
-          if (recipientName == controllerChat.login || senderName == controllerChat.login){
+        case SendMessage(textMessage, recipientName, senderName) =>
+          if (recipientName == controllerChat.login){
             Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName))
           }
           println(textMessage + " message for " + recipientName)
           Behaviors.same
-
-        case ReceiveMessages(textMessage, recipientName, senderName) =>
-          if (recipientName == controllerChat.login.trim){ //del @ senderName
-            println("Message received")
-            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName))
-          } else if(recipientName.equals("@all")){
-            //self !  SendMessageToConversation(textMessage, senderName)
+        case UserOnline(userName) =>{
+          if(userName != controllerChat.login) {
+            Platform.runLater(() => controllerChat.loadOnlineUser(userName))
           }
           Behaviors.same
+        }
 
-        case SendMessageToConversation(textMessage: String, recipientName: String) =>
+        case SendMessageToRoom(textMessage: String, recipientName: String) =>
           println("Actor SendMessageToConversation " + textMessage, recipientName)
           Behaviors.same
 
