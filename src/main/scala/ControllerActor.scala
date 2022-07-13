@@ -36,6 +36,7 @@ object ControllerActor{
           }
           println(textMessage + " message for " + recipientName)
           Behaviors.same
+
         case UserOnline(userName) =>{
           if(userName != controllerChat.login) {
             Platform.runLater(() => controllerChat.loadOnlineUser(userName))

@@ -24,10 +24,12 @@ object ChatMainControllerLogic{
     val stage = new Stage()
 
     controller.login = login
+    controller.chatServices = new ChatServices(login)
     stage.setTitle("Chat: " + login)
     stage.setScene(new Scene(root))
     stage.setResizable(false)
     stage.show()
+    controller.loadChatPanel()
 
     controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController")
     val clusterSystem = typed.Cluster(controller.actorSystem)
@@ -39,8 +41,9 @@ class ChatMainControllerLogic extends ChatMainController {
   val PRIVATE_CHAT = "room"
   var chatType = ""
   var activeChatUser = ""
-  var login = ""
-  var chatServices = new ChatServices
+  var login=""
+  var chatServices:ChatServices = _
+
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
 
     override def actionChatBTNSend(Event: ActionEvent): Unit = {
@@ -52,14 +55,8 @@ class ChatMainControllerLogic extends ChatMainController {
     }
 
     override def actionAddFriendBTN(Event: ActionEvent): Unit = {
-//      val pathToFile = PATH_TO_CHAT + NameAddFriendTF.getText + ".txt"
-//      val fileObject = new File(pathToFile)
-//      val flag = fileObject.createNewFile()
-
       if (chatServices.createFile(NameAddFriendTF.getText)) {
         addFriendIntoFriendList()
-//        val printWriter = new PrintWriter(fileObject)
-//        printWriter.close()
         NameAddFriendTF.setText("")
         ChatUIDTF.setText("")
       } else {
@@ -83,39 +80,33 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
       }
-//      val fileWriter = new FileWriter(PATH_TO_CHAT + receiveName.trim + ".txt",true)
-//      fileWriter.write(textMessage + "\n")
-//      fileWriter.close()
       chatServices.writeMessageToFile(receiveName,textMessage,PRIVATE_CHAT)
       VBoxChatMessage.getChildren.clear()
-      loadChat(chatServices.getActiveChat())
+      loadChat(chatServices.getActivePath())
       loadChatPanel()
     }
 
-  def printReceivedPublicMessage(textMessage:String, roomName:String): Unit = {
-    if (roomName==activeChatUser) {
-      val label = new Label
-      label.setFont(new Font("Arial", 18.0))
-      label.setTextFill(Color.web("#D33CB5"))
-      label.setText(textMessage)
-      label.setWrapText(true)
-      label.setPadding(new Insets(0, 0, 10, 0))
-      VBoxChatMessage.getChildren.addAll(label)
+    def printReceivedPublicMessage(textMessage:String, roomName:String): Unit = {
+      if (roomName==activeChatUser) {
+        val label = new Label
+        label.setFont(new Font("Arial", 18.0))
+        label.setTextFill(Color.web("#D33CB5"))
+        label.setText(textMessage)
+        label.setWrapText(true)
+        label.setPadding(new Insets(0, 0, 10, 0))
+        VBoxChatMessage.getChildren.addAll(label)
+      }
+      chatServices.writeMessageToFile(roomName,textMessage,PUBLIC_CHAT)
+      VBoxChatMessage.getChildren.clear()
+      loadChat(chatServices.getActivePath())
+      loadChatPanel()
     }
-//    val fileWriter = new FileWriter(PATH_TO_ROOM + roomName.trim + ".txt",true)
-//    fileWriter.write(textMessage + "\n")
-//    fileWriter.close()
-    chatServices.writeMessageToFile(roomName,textMessage,PUBLIC_CHAT)
-    VBoxChatMessage.getChildren.clear()
-    loadChat(chatServices.getActiveChat())
-    loadChatPanel()
-  }
 
     def printUserMessage(): Unit = {
       if(ChatTFMessage.getText.nonEmpty) {
         val message = login + " => " + ChatTFMessage.getText
         val label = new Label
-        val fileWriter = new FileWriter(chatServices.getActiveChat(), true)
+        val fileWriter = new FileWriter(chatServices.getActivePath(), true)
         fileWriter.write(message + "\n")
         fileWriter.close()
         label.setFont(new Font("Arial", 18.0))
@@ -144,17 +135,16 @@ class ChatMainControllerLogic extends ChatMainController {
       val nameFriend = NameAddFriendTF.getText
       val UIDFriend = ChatUIDTF.getText
       val label = new Label
-
       label.setText(nameFriend)
       label.setPrefWidth(110.0)
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
       label.setOnMouseClicked(ActionEvent => {
         VBoxChatMessage.getChildren.clear()
-        chatServices.setActiveChat(chatServices.PATH_TO_CHAT + label.getText + ".txt")
+        chatServices.setActiveChat(label.getText)
         UserNameLabel.setText(label.getText)
         chatType = PUBLIC_CHAT
-        loadChat(chatServices.getActiveChat())
+        loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
       FriendListVbox.getChildren.add(label)
@@ -163,7 +153,6 @@ class ChatMainControllerLogic extends ChatMainController {
     override def initialize(location: URL, resources: ResourceBundle): Unit = {
       AddFriendPanel.setVisible(false)
       ChatScrollPane.setFitToWidth(true)
-      loadChatPanel()
     }
 
     def loadChatPanel(): Unit ={
@@ -183,15 +172,12 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
       label.setOnMouseClicked(ActionEvent =>{
-//        val PathToFile = PATH_TO_CHAT + userName + ".txt"
-//        val fileObject = new File(PathToFile)
-//        val flag = fileObject.createNewFile()
         chatServices.createFile(userName)
         VBoxChatMessage.getChildren.clear()
-        chatServices.setActiveChat(chatServices.PATH_TO_CHAT + label.getText+".txt")
+        chatServices.setActiveChat( label.getText)
         UserNameLabel.setText(label.getText)
         chatType = PUBLIC_CHAT
-        loadChat(chatServices.getActiveChat())
+        loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
       UserNameLabel.setText("")
@@ -203,10 +189,6 @@ class ChatMainControllerLogic extends ChatMainController {
       val titleFriendBorder = new Label
       titleFriendBorder.setText("Friend chat")
       FriendListVbox.getChildren.add(titleFriendBorder)
-
-//      val fileFriend = new File(PATH_TO_CHAT)
-//      val arrFriend = fileFriend.listFiles
-
       chatServices.loadFile(chatServices.PATH_TO_CHAT).foreach{f:File =>
         val label = new Label
         label.setText(f.getName.substring(0,f.getName.length-4))
@@ -215,10 +197,10 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
         label.setOnMouseClicked(ActionEvent =>{
           VBoxChatMessage.getChildren.clear()
-          chatServices.setActiveChat(chatServices.PATH_TO_CHAT + label.getText+".txt")
+          chatServices.setActiveChat(label.getText)
           UserNameLabel.setText(label.getText)
           chatType = PUBLIC_CHAT
-          loadChat(chatServices.getActiveChat())
+          loadChat(chatServices.getActivePath())
           activeChatUser = label.getText.trim
         })
         UserNameLabel.setText("")
@@ -231,10 +213,6 @@ class ChatMainControllerLogic extends ChatMainController {
       val titleRoomBorder = new Label
       titleRoomBorder.setText("Room chat")
       FriendListVbox.getChildren.add(titleRoomBorder)
-
-//      val fileRoom = new File(PATH_TO_ROOM)
-//      val arrRoom = fileRoom.listFiles
-
       chatServices.loadFile(chatServices.PATH_TO_ROOM).foreach{f:File =>
         val label = new Label
         label.setText(f.getName.substring(0,f.getName.length-4))
@@ -243,10 +221,10 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setStyle("-fx-background-color: #010f1a; -fx-border-color: #949049;")
         label.setOnMouseClicked(ActionEvent =>{
           VBoxChatMessage.getChildren.clear()
-          chatServices.setActiveChat(chatServices.PATH_TO_ROOM + label.getText+".txt")
+          chatServices.setActiveRoom(label.getText)
           chatType = PRIVATE_CHAT
           UserNameLabel.setText(label.getText)
-          loadChat(chatServices.getActiveChat())
+          loadChat(chatServices.getActivePath())
           activeChatUser = label.getText.trim
         })
         UserNameLabel.setText("")
