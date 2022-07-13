@@ -11,7 +11,7 @@ object ControllerActor{
   // сообшение оправленные(личные)
   case class SendMessageToRoom (textMessage:String,roomName:String,senderName:String) extends ChatEvent
   // сообщения отправленные (публичные)
-  case class ReceiveMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
+  case class MessageDelivered (replyTo:String,responsible:String) extends ChatEvent
   // сообщения полученные (публичные)
   case class FriendRequest (friendName: String) extends ChatEvent
   // запроса в друзья
@@ -50,8 +50,13 @@ object ControllerActor{
             println("message: " + textMessage + " sender: " + senderName + " room => "+ roomName )
           }
           Behaviors.same
-        case ReceiveMessageToConversation(textMessage: String, recipientName: String) =>
-          println("Actor ReceiveMessageToConversation " + textMessage, recipientName)
+        case MessageDelivered(replyTo:String,responsible:String) =>
+          if(replyTo == controllerChat.login) {
+            Platform.runLater(() => controllerChat.chatServices.createFile(responsible))
+            Platform.runLater(() => controllerChat.loadChatPanel())
+            println("Actor MessageDelivered ok " + replyTo)
+          }
+          println("ok")
           Behaviors.same
 
         case FriendRequest(friendName: String) =>

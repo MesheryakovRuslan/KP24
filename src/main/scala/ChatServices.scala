@@ -14,8 +14,16 @@ class ChatServices(val login: String) {
     if (!theDir.exists) theDir.mkdirs
   }
 
+  def createRoom(): Boolean ={
+    val pathToFile = PATH_TO_ROOM+ "/MainRoom.txt"
+    val fileObject = new File(pathToFile)
+    val flag = fileObject.createNewFile()
+    print(fileObject.getPath)
+    flag
+  }
+
   def createFile(nameFile:String): Boolean ={
-    val pathToFile = PATH_TO_CHAT + "/" + nameFile.trim + ".txt"
+    val pathToFile = PATH_TO_CHAT + "/" + nameFile + ".txt"
     val fileObject = new File(pathToFile)
     val flag = fileObject.createNewFile()
     print(fileObject.getPath)
@@ -23,10 +31,10 @@ class ChatServices(val login: String) {
   }
   def writeMessageToFile (nameFile:String, message:String,directory:String): Unit ={
     if (directory == PRIVATE_CHAT){
-      val fileWriter = new FileWriter(PATH_TO_CHAT + "/"  + nameFile.trim + ".txt",true)
+      val fileWriter = new FileWriter(PATH_TO_CHAT + "/"  + nameFile + ".txt",true)
       fileWriter.write(message + "\n")
     }else {
-      val fileWriter = new FileWriter(PATH_TO_ROOM + "/"  + nameFile.trim + ".txt",true)
+      val fileWriter = new FileWriter(PATH_TO_ROOM + "/"  + nameFile + ".txt",true)
       fileWriter.write(message + "\n")
       fileWriter.close()
     }
@@ -43,11 +51,11 @@ class ChatServices(val login: String) {
   }
 
   def setActiveChat(name:String): Unit = {
-    activeChatPath = PATH_TO_CHAT+name+".txt"
+    activeChatPath = PATH_TO_CHAT + "/"  + name +".txt"
   }
 
   def setActiveRoom(name:String): Unit = {
-    activeChatPath = PATH_TO_ROOM + name + ".txt"
+    activeChatPath = PATH_TO_ROOM + "/"  + name + ".txt"
   }
 
 }

@@ -29,7 +29,9 @@ object ChatMainControllerLogic{
     stage.setScene(new Scene(root))
     stage.setResizable(false)
     stage.show()
+    controller.chatServices.createRoom()
     controller.loadChatPanel()
+
 
     controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController")
     val clusterSystem = typed.Cluster(controller.actorSystem)
@@ -43,6 +45,7 @@ class ChatMainControllerLogic extends ChatMainController {
   var activeChatUser = ""
   var login=""
   var chatServices:ChatServices = _
+
 
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
 
@@ -80,6 +83,7 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
       }
+      actorSystem ! MessageDelivered(receiveName,login)
       chatServices.writeMessageToFile(receiveName,textMessage,PRIVATE_CHAT)
       VBoxChatMessage.getChildren.clear()
       loadChat(chatServices.getActivePath())
