@@ -247,6 +247,7 @@ class ChatMainControllerLogic extends ChatMainController {
         val fixed = new String(f.getBytes())
         label.setText(fixed)
         label.setWrapText(true)
+
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
       }
