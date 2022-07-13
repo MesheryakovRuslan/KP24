@@ -33,6 +33,8 @@ object ControllerActor{
         case SendMessage(textMessage, recipientName, senderName, typeCommunication) =>
           if (recipientName == controllerChat.login){
             Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName, typeCommunication))
+          }else if(typeCommunication == "room"){
+            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName, typeCommunication))
           }
           println(textMessage + " message for " + recipientName)
           Behaviors.same
