@@ -39,8 +39,6 @@ object ChatMainControllerLogic{
 }
 
 class ChatMainControllerLogic extends ChatMainController {
-  val PUBLIC_CHAT = "chat"
-  val PRIVATE_CHAT = "room"
   var chatType = ""
   var activeChatUser = ""
   var login=""
@@ -84,7 +82,7 @@ class ChatMainControllerLogic extends ChatMainController {
         VBoxChatMessage.getChildren.addAll(label)
       }
       actorSystem ! MessageDelivered(receiveName,login)
-      chatServices.writeMessageToFile(receiveName,textMessage,PRIVATE_CHAT)
+      chatServices.writeMessageToFile(receiveName,textMessage,chatServices.PRIVATE_CHAT)
       VBoxChatMessage.getChildren.clear()
       loadChat(chatServices.getActivePath())
       loadChatPanel()
@@ -100,7 +98,7 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
       }
-      chatServices.writeMessageToFile(roomName,textMessage,PUBLIC_CHAT)
+      chatServices.writeMessageToFile(roomName,textMessage,chatServices.PUBLIC_CHAT)
       VBoxChatMessage.getChildren.clear()
       loadChat(chatServices.getActivePath())
       loadChatPanel()
@@ -119,10 +117,11 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setWrapText(true)
         label.setPadding(new Insets(0, 0, 10, 0))
         VBoxChatMessage.getChildren.addAll(label)
-        if (chatType == PUBLIC_CHAT)
-        actorSystem ! SendMessage(message, activeChatUser, login)
-        else
-        actorSystem ! SendMessageToRoom(message, activeChatUser, login)
+        if (chatType == chatServices.PUBLIC_CHAT) {
+          actorSystem ! SendMessage(message, activeChatUser, login)
+        } else {
+          actorSystem ! SendMessageToRoom(message, activeChatUser, login)
+        }
       }
     }
 
@@ -147,7 +146,7 @@ class ChatMainControllerLogic extends ChatMainController {
         VBoxChatMessage.getChildren.clear()
         chatServices.setActiveChat(label.getText)
         UserNameLabel.setText(label.getText)
-        chatType = PUBLIC_CHAT
+        chatType = chatServices.PUBLIC_CHAT
         loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
@@ -180,7 +179,7 @@ class ChatMainControllerLogic extends ChatMainController {
         VBoxChatMessage.getChildren.clear()
         chatServices.setActiveChat( label.getText)
         UserNameLabel.setText(label.getText)
-        chatType = PUBLIC_CHAT
+        chatType = chatServices.PUBLIC_CHAT
         loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
@@ -203,7 +202,7 @@ class ChatMainControllerLogic extends ChatMainController {
           VBoxChatMessage.getChildren.clear()
           chatServices.setActiveChat(label.getText)
           UserNameLabel.setText(label.getText)
-          chatType = PUBLIC_CHAT
+          chatType = chatServices.PUBLIC_CHAT
           loadChat(chatServices.getActivePath())
           activeChatUser = label.getText.trim
         })
@@ -226,7 +225,7 @@ class ChatMainControllerLogic extends ChatMainController {
         label.setOnMouseClicked(ActionEvent =>{
           VBoxChatMessage.getChildren.clear()
           chatServices.setActiveRoom(label.getText)
-          chatType = PRIVATE_CHAT
+          chatType = chatServices.PRIVATE_CHAT
           UserNameLabel.setText(label.getText)
           loadChat(chatServices.getActivePath())
           activeChatUser = label.getText.trim

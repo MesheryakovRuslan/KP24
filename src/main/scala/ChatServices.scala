@@ -1,10 +1,11 @@
 import java.io.{File, FileWriter}
+import scala.util.Using
 
 class ChatServices(val login: String) {
   val PATH_TO_CHAT = s"src/main/resources/Chats/$login"
   val PATH_TO_ROOM = s"src/main/resources/Room/$login"
-  val PUBLIC_CHAT = "chat"
-  val PRIVATE_CHAT = "room"
+  val PUBLIC_CHAT = "room"
+  val PRIVATE_CHAT = "chat"
   var activeChatPath = ""
   resolveDir(PATH_TO_CHAT)
   resolveDir(PATH_TO_ROOM)
@@ -30,13 +31,16 @@ class ChatServices(val login: String) {
     flag
   }
   def writeMessageToFile (nameFile:String, message:String,directory:String): Unit ={
-    if (directory == PRIVATE_CHAT){
-      val fileWriter = new FileWriter(PATH_TO_CHAT + "/"  + nameFile + ".txt",true)
+    if (directory == PRIVATE_CHAT) {
+      Using(new FileWriter( PATH_TO_CHAT + "/" + nameFile + ".txt", true)) { fileWriter =>
       fileWriter.write(message + "\n")
+      fileWriter.flush()
+    }
     }else {
-      val fileWriter = new FileWriter(PATH_TO_ROOM + "/"  + nameFile + ".txt",true)
-      fileWriter.write(message + "\n")
-      fileWriter.close()
+      Using(new FileWriter(PATH_TO_ROOM + "/"  + nameFile + ".txt",true)) { fileWriter =>
+        fileWriter.write(message + "\n")
+        fileWriter.flush()
+      }
     }
   }
 

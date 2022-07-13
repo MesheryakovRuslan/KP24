@@ -34,7 +34,7 @@ object ControllerActor{
           if (recipientName == controllerChat.login){
             Platform.runLater(() => controllerChat.printReceivedPrivateMessage(textMessage, senderName))
           }
-          println(textMessage + " message for " + recipientName)
+          println(textMessage + " message for " + recipientName + "/SendMessage")
           Behaviors.same
 
         case UserOnline(userName) =>{
@@ -47,8 +47,9 @@ object ControllerActor{
         case SendMessageToRoom(textMessage, roomName,senderName) =>
           if(roomName.nonEmpty && senderName != controllerChat.login) {
             Platform.runLater(() => controllerChat.printReceivedPublicMessage(textMessage, roomName))
-            println("message: " + textMessage + " sender: " + senderName + " room => "+ roomName )
+            println("message: " + textMessage + " sender: " + senderName + " room => "+ roomName +"/SendMessageToRoom")
           }
+
           Behaviors.same
         case MessageDelivered(replyTo:String,responsible:String) =>
           if(replyTo == controllerChat.login) {
