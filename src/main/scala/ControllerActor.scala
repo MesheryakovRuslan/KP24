@@ -7,9 +7,9 @@ object ControllerActor{
   //trait RoomCommand
   trait ChatEvent
   // трейт – это сущность, которая инкапсулирует поля или методы
-  case class SendMessage (textMessage:String, recipientName:String, senderName:String, typeCommunication:String) extends ChatEvent
+  case class SendMessage (textMessage:String, recipientName:String, senderName:String) extends ChatEvent
   // сообшение оправленные(личные)
-  case class SendMessageToRoom (textMessage:String,recipientName:String) extends ChatEvent
+  case class SendMessageToRoom (textMessage:String,roomName:String,senderName:String) extends ChatEvent
   // сообщения отправленные (публичные)
   case class ReceiveMessageToConversation (textMessage:String,recipientName:String) extends ChatEvent
   // сообщения полученные (публичные)
@@ -30,11 +30,9 @@ object ControllerActor{
   private def behaviorChat(): Behavior[ChatEvent] =
     Behaviors.receive { (context, message) =>
       message match {
-        case SendMessage(textMessage, recipientName, senderName, typeCommunication) =>
+        case SendMessage(textMessage, recipientName, senderName) =>
           if (recipientName == controllerChat.login){
-            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName, typeCommunication))
-          }else if(typeCommunication == "room"){
-            Platform.runLater(() => controllerChat.printReceivedMessage(textMessage, senderName, typeCommunication))
+            Platform.runLater(() => controllerChat.printReceivedPrivateMessage(textMessage, senderName))
           }
           println(textMessage + " message for " + recipientName)
           Behaviors.same
@@ -45,10 +43,12 @@ object ControllerActor{
           Behaviors.same
         }
 
-        case SendMessageToRoom(textMessage: String, recipientName: String) =>
-          println("Actor SendMessageToConversation " + textMessage, recipientName)
+        case SendMessageToRoom(textMessage, roomName,senderName) =>
+          if(roomName.nonEmpty && senderName != controllerChat.login) {
+            Platform.runLater(() => controllerChat.printReceivedPublicMessage(textMessage, roomName))
+            println("message: " + textMessage + " sender: " + senderName + " room => "+ roomName )
+          }
           Behaviors.same
-
         case ReceiveMessageToConversation(textMessage: String, recipientName: String) =>
           println("Actor ReceiveMessageToConversation " + textMessage, recipientName)
           Behaviors.same
@@ -67,8 +67,4 @@ object ControllerActor{
       }
     }
 }
-
-//https://habr.com/ru/company/piter/blog/266103/ <--
-//https://doc.akka.io/docs/akka/current/typed/distributed-pub-sub.html  <--
-//https://github.com/steklopod/akka/blob/akka_starter/src/main/resources/readmes/actors/actors.md <--
 

@@ -1,4 +1,0 @@
-Stepan => hi
-Stepan => hi
-Stepan => Привет
-Stepan => Привет
