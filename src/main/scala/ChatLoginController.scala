@@ -18,6 +18,7 @@ class ChatLoginController extends Initializable {
 
   @FXML def actionLoginBTN(Event: ActionEvent): Unit = {}
 
+
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
   }
 }

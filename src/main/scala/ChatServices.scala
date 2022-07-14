@@ -10,41 +10,42 @@ class ChatServices(val login: String) {
   resolveDir(PATH_TO_CHAT)
   resolveDir(PATH_TO_ROOM)
 
-  def resolveDir(path:String): Unit ={
+  def resolveDir(path: String): Unit = {
     val theDir = new File(path)
     if (!theDir.exists) theDir.mkdirs
   }
 
-  def createRoom(): Boolean ={
-    val pathToFile = PATH_TO_ROOM+ "/MainRoom.txt"
+  def createRoom(): Boolean = {
+    val pathToFile = PATH_TO_ROOM + "/MainRoom.txt"
     val fileObject = new File(pathToFile)
     val flag = fileObject.createNewFile()
     print(fileObject.getPath)
     flag
   }
 
-  def createFile(nameFile:String): Boolean ={
+  def createFile(nameFile: String): Boolean = {
     val pathToFile = PATH_TO_CHAT + "/" + nameFile + ".txt"
     val fileObject = new File(pathToFile)
     val flag = fileObject.createNewFile()
     print(fileObject.getPath)
     flag
   }
-  def writeMessageToFile (nameFile:String, message:String,directory:String): Unit ={
+
+  def writeMessageToFile(nameFile: String, message: String, directory: String): Unit = {
     if (directory == PRIVATE_CHAT) {
-      Using(new FileWriter( PATH_TO_CHAT + "/" + nameFile + ".txt", true)) { fileWriter =>
-      fileWriter.write(message + "\n")
-      fileWriter.flush()
-    }
-    }else {
-      Using(new FileWriter(PATH_TO_ROOM + "/"  + nameFile + ".txt",true)) { fileWriter =>
+      Using(new FileWriter(PATH_TO_CHAT + "/" + nameFile + ".txt", true)) { fileWriter =>
+        fileWriter.write(message + "\n")
+        fileWriter.flush()
+      }
+    } else {
+      Using(new FileWriter(PATH_TO_ROOM + "/" + nameFile + ".txt", true)) { fileWriter =>
         fileWriter.write(message + "\n")
         fileWriter.flush()
       }
     }
   }
 
-  def loadFile(path:String): Array [File] ={
+  def loadFile(path: String): Array[File] = {
     val fileFriend = new File(path)
     val arrFriend = fileFriend.listFiles
     arrFriend
@@ -54,12 +55,12 @@ class ChatServices(val login: String) {
     activeChatPath
   }
 
-  def setActiveChat(name:String): Unit = {
-    activeChatPath = PATH_TO_CHAT + "/"  + name +".txt"
+  def setActiveChat(name: String): Unit = {
+    activeChatPath = PATH_TO_CHAT + "/" + name + ".txt"
   }
 
-  def setActiveRoom(name:String): Unit = {
-    activeChatPath = PATH_TO_ROOM + "/"  + name + ".txt"
+  def setActiveRoom(name: String): Unit = {
+    activeChatPath = PATH_TO_ROOM + "/" + name + ".txt"
   }
 
 }

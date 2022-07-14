@@ -31,8 +31,11 @@ class ChatMainController extends Initializable {
 
 
   @FXML def actionChatBTNSend(Event: ActionEvent): Unit = {}
+
   @FXML def actionAddFriendBTN(Event: ActionEvent): Unit = {}
+
   @FXML def actionVueFriendBTN(Event: ActionEvent): Unit = {}
+
   @FXML def actionConversationBTN(Event: ActionEvent): Unit = {}
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
