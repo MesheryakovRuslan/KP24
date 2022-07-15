@@ -79,7 +79,6 @@ class ChatMainControllerLogic extends ChatMainController {
     if (chatServices.createFile(NameAddFriendTF.getText)) {
       addFriendIntoFriendList()
       NameAddFriendTF.setText("")
-      ChatUIDTF.setText("")
     } else {
       val alert = new Alert(AlertType.WARNING)
       alert.setTitle("error")
@@ -153,9 +152,12 @@ class ChatMainControllerLogic extends ChatMainController {
 
   def addFriendIntoFriendList(): Unit = {
     val nameFriend = NameAddFriendTF.getText
-    val UIDFriend = ChatUIDTF.getText
     val label = new Label
     label.setText(nameFriend)
+    labelOnClick(label)
+  }
+
+  def labelOnClick(label: Label): Unit ={
     label.setPrefWidth(110.0)
     label.setPrefHeight(39.0)
     label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
@@ -190,19 +192,7 @@ class ChatMainControllerLogic extends ChatMainController {
     chatServices.loadFile(chatServices.PATH_TO_CHAT).foreach { f: File =>
       val label = new Label
       label.setText(f.getName.substring(0, f.getName.length - 4))
-      label.setPrefWidth(130.0)
-      label.setPrefHeight(39.0)
-      label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
-      label.setOnMouseClicked(ActionEvent => {
-        VBoxChatMessage.getChildren.clear()
-        chatServices.setActiveChat(label.getText)
-        UserNameLabel.setText(label.getText)
-        chatType = chatServices.PUBLIC_CHAT
-        loadChat(chatServices.getActivePath())
-        activeChatUser = label.getText.trim
-      })
-      UserNameLabel.setText("")
-      FriendListVbox.getChildren.add(label)
+      labelOnClick(label)
     }
   }
 
@@ -214,6 +204,7 @@ class ChatMainControllerLogic extends ChatMainController {
     chatServices.loadFile(chatServices.PATH_TO_ROOM).foreach { f: File =>
       val label = new Label
       label.setText(f.getName.substring(0, f.getName.length - 4))
+      //labelOnClick(label)
       label.setPrefWidth(130.0)
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #010f1a; -fx-border-color: #949049;")
@@ -225,7 +216,7 @@ class ChatMainControllerLogic extends ChatMainController {
         loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
-      UserNameLabel.setText("")
+      //UserNameLabel.setText("")
       FriendListVbox.getChildren.add(label)
     }
   }
