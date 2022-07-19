@@ -1,4 +1,0 @@
-Ruslan => 123
-Ruslan => 123
-Ruslan => 123321
-Anna => 12312312
