@@ -1,44 +1,39 @@
 import akka.actor.typed.ActorSystem
 import com.typesafe.config.{Config, ConfigFactory}
+import java.net.ServerSocket
 
-//class ActorStart(port: Int, controller: ChatMainControllerLogic, app: Main) {
 class ActorStart(controller: ChatMainControllerLogic, app: Main, ip: String, port: String) {
 
-    var nodeIP = ip
-    var nodePort = port
-    if(nodeIP.isEmpty || nodePort.isEmpty){
+    if (ip.isEmpty) {
       controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfigHost())
       app.actorSystem = controller.actorSystem
-    }else{
-      var search: Boolean = true
-        var portConnect:Int = 2550
-        do {
-          try {
-            controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfigConnect(portConnect,ip))
-            search = false
-            println(ip+":"+port)
-          }
-          catch {
-            case _: Throwable => portConnect += 1
-          }
-        }
-        while (search && portConnect < portConnect + 10)
+    } else {
+      try {
+        controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfigConnect(port, ip))
+        println("seed-nodes" + ip + ":" + port)
+        //println("app" + ip + ":" + nodePort)
+      }
+      catch {
+        case _: Throwable =>
+      }
     }
 
-  def getConfigConnect(port: Int, ip: String): Config = {
+    println(controller.actorSystem.address.port)
+
+  def getConfigConnect(port: String, ip: String): Config = {
     ConfigFactory.parseString(
       s"""
       akka.cluster.seed-nodes = ["akka://AkkaController@$ip:$port"]
-      akka.remote.artery.canonical.hostname = "0.0.0.0"
-      akka.remote.artery.canonical.port = $port
+      akka.remote.artery.canonical.hostname = "localhost"
+      akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
 
   def getConfigHost(): Config = {
     ConfigFactory.parseString(
       s"""
-      akka.remote.artery.canonical.hostname = "0.0.0.0"
-      akka.remote.artery.canonical.port = 2551
+      akka.remote.artery.canonical.hostname = "localhost"
+      akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
 }
