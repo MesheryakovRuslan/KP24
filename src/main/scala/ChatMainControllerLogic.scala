@@ -20,7 +20,7 @@ object ChatMainControllerLogic {
     val root: Parent = loader.load()
     val controller: ChatMainControllerLogic = loader.getController
     val stage = new Stage()
-    var port = 2551
+    val port = 2551
 
     controller.login = login
     controller.chatServices = new ChatServices(login)
@@ -30,7 +30,9 @@ object ChatMainControllerLogic {
     stage.show()
     controller.chatServices.createRoom()
     controller.loadChatPanel()
+
     val actorSystem = new ActorStart(port,controller,app)
+    controller.userOnline()
   }
 }
 
@@ -40,6 +42,37 @@ class ChatMainControllerLogic extends ChatMainController {
   var login = ""
   var chatServices: ChatServices = _
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
+  var onlineUsersList = List()
+
+  def userOnline(): Unit ={
+    Thread.sleep(4000)
+    actorSystem ! UserOnline(login)
+  }
+
+  def addOnlineUser(userName:String): Unit ={
+    //actorSystem ! UserOnline(login)
+    var addToOnlineList: Boolean = true
+    onlineUsersList.foreach( user =>
+    if(user == userName){
+      addToOnlineList = false
+    }
+    )
+    if(addToOnlineList){
+      onlineUsersList :+ userName
+    }
+   // loadChatPanel()
+  }
+
+  def PrintOnlineUser(): Unit ={
+    val titleOnlineBorder = new Label
+    titleOnlineBorder.setText("Online chat")
+    FriendListVbox.getChildren.add(titleOnlineBorder)
+    onlineUsersList.foreach(userOnline => {
+      val label = new Label
+      label.setText(userOnline)
+      labelOnClick(label)
+    })
+  }
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
     if (ChatTFMessage.getText.nonEmpty && chatType.trim.nonEmpty) {
@@ -155,7 +188,7 @@ class ChatMainControllerLogic extends ChatMainController {
     FriendListVbox.getChildren.clear()
     loadRoom()
     loadStoryChat()
-
+    PrintOnlineUser()
   }
 
   def loadStoryChat(): Unit = {

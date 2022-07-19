@@ -16,6 +16,9 @@ object ControllerActor {
   // отрисовывает чат с новым пользователем
   case class MessageDelivered(replyTo: String, responsible: String) extends ChatEvent
 
+  // отрисовка пользователя онлайн
+  case class UserOnline(userName: String) extends ChatEvent
+
   var controllerChat: ChatMainControllerLogic = _
 
   def apply(controller: ChatMainControllerLogic): Behavior[ChatEvent] = {
@@ -49,6 +52,13 @@ object ControllerActor {
           println("ok")
           Behaviors.same
 
+        case UserOnline(userName) =>
+          if (userName != controllerChat.login) {
+            print(userName + " => online")
+            Platform.runLater(() => controllerChat.addOnlineUser(userName))
+          }
+          print(userName + "Not ok")
+          Behaviors.same
         case _ =>
           println("!!!")
           Behaviors.same

@@ -27,4 +27,5 @@ class ActorStart(portConnect: Int, controller: ChatMainControllerLogic, app: Mai
       akka.remote.artery.canonical.port = $port
     """).withFallback(ConfigFactory.load())
   }
+
 }

@@ -1,3 +1,0 @@
-Ruslan => hi
-Anna => 123
-Ruslan => 123
