@@ -16,12 +16,11 @@ import java.util.ResourceBundle
 import scala.collection.mutable.ListBuffer
 
 object ChatMainControllerLogic {
-  def initializeFrame(login: String, app: Main): Unit = {
+  def initializeFrame(login: String, app: Main, ip: String, port: String): Unit = {
     val loader = new FXMLLoader(getClass.getResource("FXML/ChatSample.fxml"))
     val root: Parent = loader.load()
     val controller: ChatMainControllerLogic = loader.getController
     val stage = new Stage()
-    val port = 2551
 
     controller.login = login
     controller.chatServices = new ChatServices(login)
@@ -32,7 +31,7 @@ object ChatMainControllerLogic {
     controller.chatServices.createRoom()
     controller.loadChatPanel()
 
-    val actorSystem = new ActorStart(port,controller,app)
+    val actorSystem = new ActorStart(controller,app, ip, port)
     controller.userOnline()
   }
 }

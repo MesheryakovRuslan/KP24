@@ -4,9 +4,9 @@ class ChatLoginControllerLogic extends ChatLoginController {
   //LogIn in chat and open window chat
   var app: Main = _
   override def actionLoginBTN(event: ActionEvent): Unit = {
-    if (LoginTF.getText.trim.nonEmpty & PasswordTF.getText.trim.nonEmpty) {
+    if (LoginTF.getText.trim.nonEmpty) {
       LoginBTN.getScene.getWindow.hide()
-      ChatMainControllerLogic.initializeFrame(LoginTF.getText.trim,app)
+      ChatMainControllerLogic.initializeFrame(LoginTF.getText.trim,app,IPTF.getText.trim, PortTF.getText.trim)
     }
   }
 }

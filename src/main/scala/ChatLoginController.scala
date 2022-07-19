@@ -8,13 +8,14 @@ import java.util.ResourceBundle
 
 
 class ChatLoginController extends Initializable {
-  @FXML protected var ChatLogIn: AnchorPane = null
-  @FXML protected var LoginTF: TextField = null
-  @FXML protected var PasswordTF: TextField = null
-  @FXML protected var LoginTitleLabel: Label = null
-  @FXML protected var PasswordTitleLabel: Label = null
-  @FXML protected var TitleLabel: Label = null
-  @FXML protected var LoginBTN: Button = null
+  @FXML protected var ChatLogIn: AnchorPane = _
+  @FXML protected var LoginTF: TextField = _
+  @FXML protected var PortTF: TextField = _
+  @FXML protected var IPTF: TextField = _
+  @FXML protected var LoginTitleLabel: Label = _
+  @FXML protected var PortLabelTitle: Label = _
+  @FXML protected var TitleLabel: Label = _
+  @FXML protected var LoginBTN: Button = _
 
   @FXML def actionLoginBTN(Event: ActionEvent): Unit = {}
 
