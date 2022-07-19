@@ -13,6 +13,7 @@ import javafx.stage.Stage
 import java.io._
 import java.net.URL
 import java.util.ResourceBundle
+import scala.collection.mutable.ListBuffer
 
 object ChatMainControllerLogic {
   def initializeFrame(login: String, app: Main): Unit = {
@@ -42,7 +43,7 @@ class ChatMainControllerLogic extends ChatMainController {
   var login = ""
   var chatServices: ChatServices = _
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
-  var onlineUsersList = List()
+  var onlineUsersList = ListBuffer[String]()
 
   def userOnline(): Unit ={
     Thread.sleep(4000)
@@ -50,7 +51,6 @@ class ChatMainControllerLogic extends ChatMainController {
   }
 
   def addOnlineUser(userName:String): Unit ={
-    //actorSystem ! UserOnline(login)
     var addToOnlineList: Boolean = true
     onlineUsersList.foreach( user =>
     if(user == userName){
@@ -58,9 +58,10 @@ class ChatMainControllerLogic extends ChatMainController {
     }
     )
     if(addToOnlineList){
-      onlineUsersList :+ userName
+      actorSystem ! UserOnline(login)
+      onlineUsersList += userName
     }
-   // loadChatPanel()
+    loadChatPanel()
   }
 
   def PrintOnlineUser(): Unit ={

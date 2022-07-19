@@ -1,0 +1,4 @@
+Ruslan => 1
+Сергей => 1
+Anna => 1
+Ruslan => 1
