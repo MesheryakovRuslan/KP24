@@ -1,4 +1,5 @@
 import java.io.{File, FileWriter}
+import scala.io.Source
 import scala.util.Using
 
 class ChatServices(val login: String) {
@@ -6,7 +7,7 @@ class ChatServices(val login: String) {
   val PATH_TO_ROOM = s"src/main/resources/Room/$login"
   val PUBLIC_CHAT = "room"
   val PRIVATE_CHAT = "chat"
-  var activeChatPath = ""
+  private var activeChatPath = ""
   resolveDir(PATH_TO_CHAT)
   resolveDir(PATH_TO_ROOM)
 
@@ -51,6 +52,12 @@ class ChatServices(val login: String) {
     arrFriend
   }
 
+  def loadChatMessage(path: String): List[String] ={
+    Using.resource(Source.fromFile(path)){lines =>
+      lines.getLines().toList
+    }
+  }
+
   def getActivePath(): String = {
     activeChatPath
   }
@@ -62,5 +69,4 @@ class ChatServices(val login: String) {
   def setActiveRoom(name: String): Unit = {
     activeChatPath = PATH_TO_ROOM + "/" + name + ".txt"
   }
-
 }

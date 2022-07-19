@@ -1,7 +1,5 @@
 import ControllerActor._
 import akka.actor.typed.ActorSystem
-import akka.cluster.typed
-import com.typesafe.config.ConfigFactory
 import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
@@ -15,16 +13,14 @@ import javafx.stage.Stage
 import java.io._
 import java.net.URL
 import java.util.ResourceBundle
-import scala.io.Source
 
 object ChatMainControllerLogic {
   def initializeFrame(login: String, app: Main): Unit = {
-    val loader = new FXMLLoader(getClass.getResource("FXML/ChatSimple.fxml"))
+    val loader = new FXMLLoader(getClass.getResource("FXML/ChatSample.fxml"))
     val root: Parent = loader.load()
     val controller: ChatMainControllerLogic = loader.getController
     val stage = new Stage()
     var port = 2551
-    var search: Boolean = true
 
     controller.login = login
     controller.chatServices = new ChatServices(login)
@@ -34,29 +30,7 @@ object ChatMainControllerLogic {
     stage.show()
     controller.chatServices.createRoom()
     controller.loadChatPanel()
-
-    do {
-      try {
-        controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfig(port))
-        search = false
-      }
-      catch {
-        case _: Throwable => port += 1
-      }
-    }
-    while (search && port < 2555)
-
-    app.actorSystem = controller.actorSystem
-    val clusterSystem = typed.Cluster(controller.actorSystem)
-  }
-
-  def getConfig(port: Int) = {
-    ConfigFactory.parseString(
-      s"""
-      akka.cluster.seed-nodes = ["akka://AkkaController@127.0.0.1:2551"]
-      akka.remote.artery.canonical.hostname = "127.0.0.1"
-      akka.remote.artery.canonical.port = $port
-    """).withFallback(ConfigFactory.load())
+    val actorSystem = new ActorStart(port,controller,app)
   }
 }
 
@@ -161,7 +135,7 @@ class ChatMainControllerLogic extends ChatMainController {
     label.setPrefWidth(110.0)
     label.setPrefHeight(39.0)
     label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
-    label.setOnMouseClicked(ActionEvent => {
+    label.setOnMouseClicked(_ => {
       VBoxChatMessage.getChildren.clear()
       chatServices.setActiveChat(label.getText)
       UserNameLabel.setText(label.getText)
@@ -208,7 +182,7 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setPrefWidth(130.0)
       label.setPrefHeight(39.0)
       label.setStyle("-fx-background-color: #010f1a; -fx-border-color: #949049;")
-      label.setOnMouseClicked(ActionEvent => {
+      label.setOnMouseClicked(_ => {
         VBoxChatMessage.getChildren.clear()
         chatServices.setActiveRoom(label.getText)
         chatType = chatServices.PRIVATE_CHAT
@@ -216,14 +190,12 @@ class ChatMainControllerLogic extends ChatMainController {
         loadChat(chatServices.getActivePath())
         activeChatUser = label.getText.trim
       })
-      //UserNameLabel.setText("")
       FriendListVbox.getChildren.add(label)
     }
   }
 
-  def loadChat(path: String) {
-    val lines = Source.fromFile(path).getLines.toList
-    lines.foreach { f: String =>
+  def loadChat(path: String): Unit = {
+      chatServices.loadChatMessage(path).foreach { f: String =>
       val label = new Label
       label.setFont(new Font("Arial", 18.0))
       label.setTextFill(Color.web("#0076a3"))
@@ -234,7 +206,5 @@ class ChatMainControllerLogic extends ChatMainController {
       VBoxChatMessage.getChildren.addAll(label)
     }
   }
-
-
 }
 
