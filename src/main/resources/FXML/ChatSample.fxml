@@ -66,7 +66,7 @@
         </HBox>
         <HBox fx:id="HBoxTitleChat" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
             <children>
-                <Label fx:id="UserNameLabel" prefHeight="44.0" prefWidth="82.0" text="UserName" textAlignment="CENTER" textFill="WHITE" />
+                <Label fx:id="UserNameLabel" prefHeight="44.0"  text="UserName" textAlignment="CENTER" textFill="WHITE" />
             </children>
         </HBox>
         <Label fx:id="ChatListLabel" text="Chat list" textFill="WHITE" />

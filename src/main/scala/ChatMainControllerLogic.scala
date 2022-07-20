@@ -1,4 +1,5 @@
 import ControllerActor._
+import akka.actor.Address
 import akka.actor.typed.ActorSystem
 import akka.cluster.Cluster
 import javafx.event.ActionEvent
@@ -33,10 +34,12 @@ object ChatMainControllerLogic {
     controller.loadChatPanel()
 
     val actorSystem = ActorStart.start(controller, ip, port)
+    val cluster = Cluster(actorSystem)
+    //cluster.join(cluster.selfAddress)
 
     app.actorSystem = actorSystem
     controller.actorSystem = actorSystem
-    controller.printIP(actorSystem.address.port)
+    controller.printIP(actorSystem.address)
 
     controller.userOnline()
   }
@@ -55,8 +58,9 @@ class ChatMainControllerLogic extends ChatMainController {
     actorSystem ! UserOnline(login)
   }
 
-  def printIP(ip:Option[Int]): Unit ={
-    ChatListLabel.setText(ip.toString)
+  def printIP(ip:Address): Unit ={
+    //ChatListLabel.setText(ip.toString)
+    UserNameLabel.setText(ip.toString)
   }
   def addOnlineUser(userName:String): Unit ={
     var addToOnlineList: Boolean = true

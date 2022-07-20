@@ -1,50 +1,43 @@
 import akka.actor.typed.ActorSystem
 import com.typesafe.config.{Config, ConfigFactory}
-
-import java.lang.ModuleLayer.Controller
-import java.net.ServerSocket
+import java.net.{DatagramSocket, InetAddress, ServerSocket}
+import scala.util.{Try, Using}
 
 object ActorStart{
 
   def start(controller: ChatMainControllerLogic, ip:String, port:String):
   ActorSystem[ControllerActor.ChatEvent] = {
-  val config: Config = if(ip.isEmpty) getConfigHost()
-  else getConfigConnect(port,ip)
-    ActorSystem( ActorMain(controller), "AkkaController",config)
+    def findFreePort(): Try[Int] = Using(new ServerSocket(0)) (_.getLocalPort)
+    val machineIP = getIP()
+    println(machineIP)
+    val freePort = findFreePort().getOrElse(0)
+    val config: Config = if(ip.isEmpty) getConfigHost(freePort,machineIP)
+    else getConfigConnect(port,ip, freePort,machineIP)
+    ActorSystem( ActorMain(controller), "ControllerActor",config)
   }
 
-  //controller.printIP(controller.actorSystem.address.port)
+  def getIP(): String = {
+    Using(new DatagramSocket) { systemIP =>
+      systemIP.connect(InetAddress.getByName("8.8.8.8"), 10002)
+      systemIP.getLocalAddress.getHostAddress
+    }.getOrElse("localhost")
+  }
 
-  def getConfigConnect(port: String, ip: String): Config = {
+  def getConfigConnect(port: String, ip: String, freePort:Int, machineIP:String): Config = {
     ConfigFactory.parseString(
       s"""
-      akka.cluster.seed-nodes = ["akka://AkkaController@$ip:$port"]
-      akka.remote.artery.canonical.hostname = "127.0.0.1"
+      akka.cluster.seed-nodes = ["akka://ControllerActor@$ip:$port", "akka://ControllerActor@$machineIP:$freePort"]
+      akka.remote.artery.canonical.hostname = $machineIP
       akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
 
-  def getConfigHost(): Config = {
+  def getConfigHost(freePort:Int, machineIP:String): Config = {
     ConfigFactory.parseString(
       s"""
-      akka.remote.artery.canonical.hostname = "127.0.0.1"
-      akka.remote.artery.canonical.port = 0
+      akka.cluster.seed-nodes = ["akka://ControllerActor@$machineIP:$freePort"]
+      akka.remote.artery.canonical.hostname = $machineIP
+      akka.remote.artery.canonical.port = $freePort
     """).withFallback(ConfigFactory.load())
   }
 }
-
-
-//    if (ip.isEmpty) {
-//      controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfigHost())
-//      app.actorSystem = controller.actorSystem
-//    } else {
-//      try {
-//        controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfigConnect(port, ip))
-//        println("seed-nodes" + ip + ":" + port)
-//        //println("app" + ip + ":" + nodePort)
-//      }
-//      catch {
-//        case _: Throwable =>
-//      }
-//    }
-//  }
