@@ -25,7 +25,7 @@ class ActorStart(controller: ChatMainControllerLogic, app: Main, ip: String, por
     ConfigFactory.parseString(
       s"""
       akka.cluster.seed-nodes = ["akka://AkkaController@$ip:$port"]
-      akka.remote.artery.canonical.hostname = "192.168.0.0"
+      akka.remote.artery.canonical.hostname = "0.0.0.0"
       akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
@@ -33,7 +33,7 @@ class ActorStart(controller: ChatMainControllerLogic, app: Main, ip: String, por
   def getConfigHost(): Config = {
     ConfigFactory.parseString(
       s"""
-      akka.remote.artery.canonical.hostname = "192.168.0.0"
+      akka.remote.artery.canonical.hostname = "0.0.0.0"
       akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
