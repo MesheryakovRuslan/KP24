@@ -19,7 +19,7 @@ object ControllerActor {
   // отрисовка пользователя онлайн
   case class UserOnline(userName: String) extends ChatEvent
 
-  // отрисовка пользователя онлайн
+  // Удалить пользователя офлайн
   case class UserOffline(userName:String) extends ChatEvent
 
   var controllerChat: ChatMainControllerLogic = _

@@ -17,7 +17,6 @@ class Main extends Application {
     controllerLogin.app = this
     stage.setResizable(false)
     stage.show()
-
   }
 
   override def stop(): Unit = {
@@ -26,6 +25,5 @@ class Main extends Application {
     Option(actorSystem).foreach(f =>
       f.terminate()
     )
-
   }
 }

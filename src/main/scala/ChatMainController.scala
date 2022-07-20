@@ -2,10 +2,8 @@ import javafx.event.ActionEvent
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
 import javafx.scene.layout.{AnchorPane, GridPane, HBox, VBox}
-
 import java.net.URL
 import java.util.ResourceBundle
-
 
 class ChatMainController extends Initializable {
   @FXML protected var ChatScrollPane: ScrollPane = _
@@ -29,7 +27,6 @@ class ChatMainController extends Initializable {
   @FXML protected var HBoxTitleChat: HBox = _
   @FXML protected var ChatListLabel: Label = _
   @FXML protected var AddFriendPanel: AnchorPane = _
-
 
   @FXML def actionChatBTNSend(Event: ActionEvent): Unit = {}
 
