@@ -18,13 +18,14 @@ class ActorStart(controller: ChatMainControllerLogic, app: Main, ip: String, por
       }
     }
 
-    println(controller.actorSystem.address.port)
+    controller.printIP(controller.actorSystem.address.port)
+
 
   def getConfigConnect(port: String, ip: String): Config = {
     ConfigFactory.parseString(
       s"""
       akka.cluster.seed-nodes = ["akka://AkkaController@$ip:$port"]
-      akka.remote.artery.canonical.hostname = "localhost"
+      akka.remote.artery.canonical.hostname = "192.168.0.0"
       akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
@@ -32,23 +33,8 @@ class ActorStart(controller: ChatMainControllerLogic, app: Main, ip: String, por
   def getConfigHost(): Config = {
     ConfigFactory.parseString(
       s"""
-      akka.remote.artery.canonical.hostname = "localhost"
+      akka.remote.artery.canonical.hostname = "192.168.0.0"
       akka.remote.artery.canonical.port = 0
     """).withFallback(ConfigFactory.load())
   }
 }
-
-
-
-//  var search: Boolean = true
-//  var port = portConnect
-//  do {
-//    try {
-//      controller.actorSystem = ActorSystem(ActorMain(controller), "AkkaController", getConfig(port))
-//      search = false
-//    }
-//    catch {
-//      case _: Throwable => port += 1
-//    }
-//  }
-//  while (search && portConnect < 2555)

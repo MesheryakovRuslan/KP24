@@ -49,6 +49,9 @@ class ChatMainControllerLogic extends ChatMainController {
     actorSystem ! UserOnline(login)
   }
 
+  def printIP(ip:Option[Int]): Unit ={
+    ChatListLabel.setText(ip.toString)
+  }
   def addOnlineUser(userName:String): Unit ={
     var addToOnlineList: Boolean = true
     onlineUsersList.foreach( user =>

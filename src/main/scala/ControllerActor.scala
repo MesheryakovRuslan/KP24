@@ -54,10 +54,11 @@ object ControllerActor {
 
         case UserOnline(userName) =>
           if (userName != controllerChat.login) {
-            print(userName + " => online")
+            println(userName + " => online")
             Platform.runLater(() => controllerChat.addOnlineUser(userName))
+          }else{
+            println(userName + " => not online")
           }
-          print(userName + "Not ok")
           Behaviors.same
         case _ =>
           println("!!!")
