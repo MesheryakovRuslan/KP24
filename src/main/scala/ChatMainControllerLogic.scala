@@ -1,5 +1,6 @@
 import ControllerActor._
 import akka.actor.typed.ActorSystem
+import akka.cluster.Cluster
 import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
@@ -31,7 +32,12 @@ object ChatMainControllerLogic {
     controller.chatServices.createRoom()
     controller.loadChatPanel()
 
-    val actorSystem = new ActorStart(controller,app, ip, port)
+    val actorSystem = ActorStart.start(controller, ip, port)
+
+    app.actorSystem = actorSystem
+    controller.actorSystem = actorSystem
+    controller.printIP(actorSystem.address.port)
+
     controller.userOnline()
   }
 }
