@@ -1,4 +1,4 @@
-import ControllerActor.ChatEvent
+import ControllerActor.{ChatEvent, UserOffline, controllerChat}
 import akka.actor.typed.ActorSystem
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
@@ -22,6 +22,7 @@ class Main extends Application {
 
   override def stop(): Unit = {
     super.stop()
+    actorSystem ! UserOffline(controllerChat.login)
     Option(actorSystem).foreach(f =>
       f.terminate()
     )

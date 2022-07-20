@@ -21,6 +21,7 @@ class ChatMainController extends Initializable {
   @FXML protected var VBoxFriendList: VBox = null
   @FXML protected var ChatWidthFriendLabel: Label = null
   @FXML protected var UserNameLabel: Label = null
+  @FXML protected var ipLabel: Label = null
   @FXML protected var HBoxPanelForOption: HBox = null
   @FXML protected var AddFriendBTN: Button = null
   @FXML protected var VueFriendBTN: Button = null

@@ -1,5 +1,4 @@
 import ControllerActor._
-import akka.actor.Address
 import akka.actor.typed.ActorSystem
 import akka.cluster.Cluster
 import javafx.event.ActionEvent
@@ -35,12 +34,10 @@ object ChatMainControllerLogic {
 
     val actorSystem = ActorStart.start(controller, ip, port)
     val cluster = Cluster(actorSystem)
-    //cluster.join(cluster.selfAddress)
 
     app.actorSystem = actorSystem
     controller.actorSystem = actorSystem
-    controller.printIP(actorSystem.address)
-
+    controller.printIP(actorSystem.address.toString)
     controller.userOnline()
   }
 }
@@ -53,30 +50,30 @@ class ChatMainControllerLogic extends ChatMainController {
   var actorSystem: ActorSystem[ControllerActor.ChatEvent] = _
   var onlineUsersList = ListBuffer[String]()
 
-  def userOnline(): Unit ={
+  def userOnline(): Unit = {
     Thread.sleep(4000)
     actorSystem ! UserOnline(login)
   }
 
-  def printIP(ip:Address): Unit ={
-    //ChatListLabel.setText(ip.toString)
-    UserNameLabel.setText(ip.toString)
+  def printIP(ip: String): Unit = {
+    ipLabel.setText(ip.substring(23))
   }
-  def addOnlineUser(userName:String): Unit ={
+
+  def addOnlineUser(userName: String): Unit = {
     var addToOnlineList: Boolean = true
-    onlineUsersList.foreach( user =>
-    if(user == userName){
-      addToOnlineList = false
-    }
+    onlineUsersList.foreach(user =>
+      if (user == userName) {
+        addToOnlineList = false
+      }
     )
-    if(addToOnlineList){
+    if (addToOnlineList) {
       actorSystem ! UserOnline(login)
       onlineUsersList += userName
     }
     loadChatPanel()
   }
 
-  def PrintOnlineUser(): Unit ={
+  def PrintOnlineUser(): Unit = {
     val titleOnlineBorder = new Label
     titleOnlineBorder.setText("Online chat")
     FriendListVbox.getChildren.add(titleOnlineBorder)
@@ -85,6 +82,15 @@ class ChatMainControllerLogic extends ChatMainController {
       label.setText(userOnline)
       labelOnClick(label)
     })
+  }
+
+  def delOfflineUser(userName: String): Unit = {
+    onlineUsersList.foreach(user =>
+      if (user == userName) {
+        onlineUsersList -= userName
+      }
+    )
+    loadChatPanel()
   }
 
   override def actionChatBTNSend(Event: ActionEvent): Unit = {
@@ -177,13 +183,14 @@ class ChatMainControllerLogic extends ChatMainController {
     labelOnClick(label)
   }
 
-  def labelOnClick(label: Label): Unit ={
+  def labelOnClick(label: Label): Unit = {
     label.setPrefWidth(110.0)
     label.setPrefHeight(39.0)
     label.setStyle("-fx-background-color: #01191A; -fx-border-color: #499094;")
     label.setOnMouseClicked(_ => {
       VBoxChatMessage.getChildren.clear()
       chatServices.setActiveChat(label.getText)
+      chatServices.createFile(label.getText)
       UserNameLabel.setText(label.getText)
       chatType = chatServices.PUBLIC_CHAT
       loadChat(chatServices.getActivePath())
@@ -241,7 +248,7 @@ class ChatMainControllerLogic extends ChatMainController {
   }
 
   def loadChat(path: String): Unit = {
-      chatServices.loadChatMessage(path).foreach { f: String =>
+    chatServices.loadChatMessage(path).foreach { f: String =>
       val label = new Label
       label.setFont(new Font("Arial", 18.0))
       label.setTextFill(Color.web("#0076a3"))

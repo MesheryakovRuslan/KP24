@@ -10,8 +10,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <GridPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" style="-fx-background-color: #032728;" styleClass="GridPanelChat" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatMainControllerLogic">
     <columnConstraints>
@@ -49,7 +51,16 @@
                   </VBox>
                </content>
             </ScrollPane>
-            <AnchorPane fx:id="AddFriendPanel" prefHeight="124.0" prefWidth="130.0" style="-fx-border-color: white; ">
+            <Pane fx:id="ipPanel" prefHeight="2.0" prefWidth="130.0" style="-fx-padding: 0,0,0,40;">
+               <children>
+                  <Label fx:id="ipLabel" layoutX="6.0" layoutY="10.0" text="Label" textFill="WHITE">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <AnchorPane fx:id="AddFriendPanel" prefHeight="124.0" prefWidth="130.0" style="-fx-border-color: white; -fx-background-color: #032728;">
                <children>
                   <Label fx:id="ChatListLabel1" layoutX="30.0" layoutY="6.0" text="Add Friend" textFill="WHITE" />
                   <TextField fx:id="NameAddFriendTF" layoutX="7.0" layoutY="49.0" prefHeight="26.0" prefWidth="117.0" />
@@ -66,7 +77,7 @@
         </HBox>
         <HBox fx:id="HBoxTitleChat" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
             <children>
-                <Label fx:id="UserNameLabel" prefHeight="44.0"  text="UserName" textAlignment="CENTER" textFill="WHITE" />
+                <Label fx:id="UserNameLabel" prefHeight="44.0" text="UserName" textAlignment="CENTER" textFill="WHITE" />
             </children>
         </HBox>
         <Label fx:id="ChatListLabel" text="Chat list" textFill="WHITE" />

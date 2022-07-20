@@ -1,3 +1,0 @@
-Stepan => 123
-Stepan => 123
-Stepan => 4321

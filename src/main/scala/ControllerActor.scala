@@ -19,6 +19,9 @@ object ControllerActor {
   // отрисовка пользователя онлайн
   case class UserOnline(userName: String) extends ChatEvent
 
+  // отрисовка пользователя онлайн
+  case class UserOffline(userName:String) extends ChatEvent
+
   var controllerChat: ChatMainControllerLogic = _
 
   def apply(controller: ChatMainControllerLogic): Behavior[ChatEvent] = {
@@ -60,6 +63,11 @@ object ControllerActor {
             println(userName + " => not online")
           }
           Behaviors.same
+
+        case UserOffline(userName) =>
+          Platform.runLater(() => controllerChat.delOfflineUser(userName))
+          Behaviors.same
+
         case _ =>
           println("!!!")
           Behaviors.same
