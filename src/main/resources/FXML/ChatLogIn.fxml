@@ -36,6 +36,6 @@
             <Font name="Segoe UI" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="114.0" layoutY="158.0" text="To connect to another client" />
+      <Label layoutX="105.0" layoutY="158.0" text="for connection to another client" />
    </children>
 </AnchorPane>
